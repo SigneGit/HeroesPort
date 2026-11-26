@@ -1,6 +1,6 @@
 {
   "name": "dd-heroes-pc",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "private": true,
   "description": "User-supplied Xbox disc import and analysis tools for a Dungeons & Dragons: Heroes PC recompilation research project",
   "type": "module",

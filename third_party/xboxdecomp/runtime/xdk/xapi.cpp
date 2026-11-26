@@ -99,7 +99,7 @@ HLE_STDCALL(XInputGetState, 2) {
         if (it == g_handles.end()) return 6;  // ERROR_INVALID_HANDLE
         port = it->second.port;
     }
-    input::Pad p = input::Poll(int(port));
+    input::Pad p = input::Poll(int(port), true);
     if (!p.connected) return 1167;  // ERROR_DEVICE_NOT_CONNECTED
     std::lock_guard<std::mutex> lock(g_ports_lock);
     Handle& h = g_handles[a[0]];

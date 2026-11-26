@@ -30,6 +30,32 @@ void RefreshCursor(HWND window) {
        ScreenToClient(window,&point) && GetClientRect(window,&client) && PtInRect(&client,point))
         SetClientCursor(window);
 }
+void DrawControllerPorts() {
+    ImGui::TextUnformatted("Keyboard: Player 1");
+    const auto controllers = input::Controllers();
+    if (controllers.empty()) {
+        ImGui::TextDisabled("No controllers detected.");
+        return;
+    }
+    ImGui::TextWrapped("One controller shares Player 1 with the keyboard. With multiple controllers, press Start to claim the next free port or choose a port below. Choosing an occupied port swaps the assignments.");
+    const char* ports[] = {"Player 1", "Player 2", "Player 3", "Player 4"};
+    for (const auto& controller : controllers) {
+        ImGui::PushID(static_cast<int>(controller.id));
+        ImGui::Text("%s (#%u)", controller.name.c_str(), controller.id);
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(140);
+        const char* selected = controller.port < 0 ? "Press Start" : ports[controller.port];
+        if (ImGui::BeginCombo("##port", selected)) {
+            for (int port = 0; port < 4; ++port) {
+                if (ImGui::Selectable(ports[port], controller.port == port))
+                    input::AssignController(controller.id, port);
+            }
+            ImGui::EndCombo();
+        }
+        ImGui::PopID();
+    }
+}
+
 std::string KeyName(uint32_t key) {
     char name[64]{};LONG scan=LONG(MapVirtualKeyA(key,MAPVK_VK_TO_VSC)<<16);
     if(key>=VK_PRIOR&&key<=VK_DOWN)scan|=1<<24;
@@ -130,10 +156,18 @@ void DrawOptions(double fps) {
                 if(ImGui::Button("Apply display and save")){app::Save();app::ApplyDisplay();}
                 ImGui::EndTabItem();
             }
-            if(ImGui::BeginTabItem("Controls")) {
+            if(ImGui::BeginTabItem("Controllers")) {
+                learning = -1;
+                DrawControllerPorts();
+                ImGui::Separator();
                 int dz=int(deadzone_percent);if(ImGui::SliderInt("Stick deadzone (%)",&dz,0,40))deadzone_percent=dz;
                 ImGui::Checkbox("Controller vibration",&rumble_enabled);
-                ImGui::TextWrapped("SDL supports Xbox, PlayStation and Switch controllers, hot-plugging and four ports. Keyboard shares player one. RB/LB map to Xbox Black/White.");
+                if(ImGui::Button("Save deadzone and vibration"))app::Save();
+                ImGui::EndTabItem();
+            }
+            if(ImGui::BeginTabItem("Keyboard")) {
+                DrawControllerPorts();
+                ImGui::Separator();
                 ImGui::TextWrapped("Click a binding, then press a key. Escape cancels. F3 and F11 are reserved.");
                 ImGui::BeginChild("Keys",ImVec2(0,245),true);
                 for(int i=0;i<24;i++){ImGui::PushID(i);ImGui::TextUnformatted(key_labels[i]);ImGui::SameLine(260);

@@ -2,7 +2,6 @@
 #include "core/input.h"
 
 #include <algorithm>
-#include <iterator>
 #include <mutex>
 #include <utility>
 
@@ -15,27 +14,57 @@ namespace input {
 
 namespace {
 
-// a controller takes the lowest free port when it is plugged in and keeps it until it is unplugged
 std::mutex g_lock;
 bool g_sdl = false;
-SDL_Gamepad* g_pads[4] = {};
+struct Device {
+    SDL_JoystickID id;
+    SDL_Gamepad* pad;
+    int port = -1;
+    bool pending_start = false;
+};
+std::vector<Device> g_devices;
+
+auto FindDevice(SDL_JoystickID id) {
+    return std::find_if(g_devices.begin(), g_devices.end(), [id](const Device& d) { return d.id == id; });
+}
+
+// A single unclaimed pad works immediately. Its port becomes fixed on Start
+// or manual assignment, so connecting more pads before Start allows any order.
+int Port(const Device& device) {
+    if (device.port < 0 && g_devices.size() == 1) return 0;
+    return device.port;
+}
+
+auto AtPort(int port) {
+    return std::find_if(g_devices.begin(), g_devices.end(), [port](const Device& d) { return Port(d) == port; });
+}
 
 void AddPad(SDL_JoystickID id) {
-    for (SDL_Gamepad* pad : g_pads)
-        if (pad && SDL_GetGamepadID(pad) == id) return;
-    SDL_Gamepad** slot = std::find(std::begin(g_pads), std::end(g_pads), nullptr);
-    if (slot == std::end(g_pads)) return;
-    *slot = SDL_OpenGamepad(id);
-    const char* name = *slot ? SDL_GetGamepadName(*slot) : SDL_GetError();
-    LOGI("input: controller %d %s: %s", int(slot - g_pads) + 1, *slot ? "plugged in" : "failed to open", name ? name : "");
+    if (FindDevice(id) != g_devices.end()) return;
+    if (auto* pad = SDL_OpenGamepad(id)) {
+        if (g_devices.size() == 1 && g_devices.front().port < 0)
+            SDL_RumbleGamepad(g_devices.front().pad, 0, 0, 0);
+        g_devices.push_back({id, pad});
+    } else LOGI("input: failed to open controller %u: %s", id, SDL_GetError());
 }
 
 void RemovePad(SDL_JoystickID id) {
-    for (int i = 0; i < 4; i++) {
-        if (!g_pads[i] || SDL_GetGamepadID(g_pads[i]) != id) continue;
-        SDL_CloseGamepad(g_pads[i]);
-        g_pads[i] = nullptr;
-        LOGI("input: controller %d unplugged", i + 1);
+    auto device = FindDevice(id);
+    if (device == g_devices.end()) return;
+    SDL_CloseGamepad(device->pad);
+    g_devices.erase(device);
+}
+
+void Join(SDL_JoystickID id) {
+    auto device = FindDevice(id);
+    if (device == g_devices.end() || device->port >= 0) return;
+    for (int port = 0; port < 4; ++port) {
+        auto occupant = AtPort(port);
+        if (occupant != g_devices.end() && occupant != device) continue;
+        device->port = port;
+        // Guest device discovery can take longer than the button press.
+        device->pending_start = true;
+        return;
     }
 }
 
@@ -50,12 +79,15 @@ void UpdatePads() {
     while (SDL_PeepEvents(&e, 1, SDL_GETEVENT, SDL_EVENT_FIRST, SDL_EVENT_LAST) == 1) {
         if (e.type == SDL_EVENT_GAMEPAD_ADDED) AddPad(e.gdevice.which);
         else if (e.type == SDL_EVENT_GAMEPAD_REMOVED) RemovePad(e.gdevice.which);
+        else if (e.type == SDL_EVENT_GAMEPAD_BUTTON_DOWN && e.gbutton.button == SDL_GAMEPAD_BUTTON_START)
+            Join(e.gbutton.which);
     }
 }
 
 }  // namespace
 
 void Init() {
+    std::lock_guard lock(g_lock);
     if (g_sdl) return;  // started already for the game code window
     // WGI reads the triggers apart and HIDAPI takes PlayStation and Switch pads. Reads come from the guest's threads,
     // so SDL's own thread takes the device notices.
@@ -71,7 +103,6 @@ void Init() {
     }
     int v = SDL_GetVersion();
     LOGI("input: SDL %d.%d.%d", SDL_VERSIONNUM_MAJOR(v), SDL_VERSIONNUM_MINOR(v), SDL_VERSIONNUM_MICRO(v));
-    std::lock_guard lock(g_lock);
     g_sdl = true;
     int count = 0;
     if (SDL_JoystickID* ids = SDL_GetGamepads(&count)) {
@@ -80,18 +111,52 @@ void Init() {
     }
 }
 
-Pad Poll(int port) {
+std::vector<Controller> Controllers() {
+    std::lock_guard lock(g_lock);
+    UpdatePads();
+    std::vector<Controller> result;
+    for (const Device& device : g_devices) {
+        const char* name = SDL_GetGamepadName(device.pad);
+        result.push_back({device.id, name ? name : "Controller", Port(device)});
+    }
+    return result;
+}
+
+void AssignController(uint32_t id, int port) {
+    if (port < 0 || port >= 4) return;
+    std::lock_guard lock(g_lock);
+    UpdatePads();
+    auto device = FindDevice(id);
+    if (device == g_devices.end()) return;
+    auto occupant = AtPort(port);
+    if (occupant != g_devices.end() && occupant != device) {
+        SDL_RumbleGamepad(occupant->pad, 0, 0, 0);
+        occupant->port = device->port;
+        occupant->pending_start = false;
+    }
+    SDL_RumbleGamepad(device->pad, 0, 0, 0);
+    device->port = port;
+    device->pending_start = false;
+}
+
+Pad Poll(int port, bool read_state) {
     Pad p;
     {
         std::lock_guard lock(g_lock);
         UpdatePads();
-        if (SDL_Gamepad* pad = port >= 0 && port < 4 ? g_pads[port] : nullptr) {
+        auto device = AtPort(port);
+        if (port >= 0 && port < 4 && device != g_devices.end()) {
+            auto* pad = device->pad;
             p.connected = true;
             constexpr SDL_GamepadButton kButtons[] = {
                 SDL_GAMEPAD_BUTTON_DPAD_UP,   SDL_GAMEPAD_BUTTON_DPAD_DOWN,  SDL_GAMEPAD_BUTTON_DPAD_LEFT,
                 SDL_GAMEPAD_BUTTON_DPAD_RIGHT, SDL_GAMEPAD_BUTTON_START,     SDL_GAMEPAD_BUTTON_BACK,
                 SDL_GAMEPAD_BUTTON_LEFT_STICK, SDL_GAMEPAD_BUTTON_RIGHT_STICK};
             for (int i = 0; i < 8; i++) p.buttons |= uint16_t(SDL_GetGamepadButton(pad, kButtons[i]) << i);
+            if (read_state && device->pending_start) {
+                p.buttons |= 1u << 4;
+                device->pending_start = false;
+            }
             // A B X Y black white
             constexpr SDL_GamepadButton kAnalog[] = {SDL_GAMEPAD_BUTTON_SOUTH, SDL_GAMEPAD_BUTTON_EAST,
                                                      SDL_GAMEPAD_BUTTON_WEST,  SDL_GAMEPAD_BUTTON_NORTH,
@@ -120,9 +185,9 @@ uint16_t HeldOnAnyController() {
     std::lock_guard lock(g_lock);
     UpdatePads();
     uint16_t held = 0;
-    for (SDL_Gamepad* pad : g_pads)
+    for (const Device& device : g_devices)
         for (auto [button, mask] : kFaceButtons)
-            if (pad && SDL_GetGamepadButton(pad, button)) held |= mask;
+            if (SDL_GetGamepadButton(device.pad, button)) held |= mask;
     return held;
 }
 
@@ -130,7 +195,8 @@ uint16_t HeldOnAnyController() {
 void Rumble(int port, uint16_t left, uint16_t right) {
     if (app::kGame.rumble) app::kGame.rumble(port, left, right);
     std::lock_guard lock(g_lock);
-    if (port >= 0 && port < 4 && g_pads[port]) SDL_RumbleGamepad(g_pads[port], left, right, 0);
+    auto device = AtPort(port);
+    if (port >= 0 && port < 4 && device != g_devices.end()) SDL_RumbleGamepad(device->pad, left, right, 0);
 }
 
 }  // namespace input

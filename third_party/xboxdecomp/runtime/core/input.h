@@ -1,5 +1,7 @@
 #pragma once
 #include <cstdint>
+#include <string>
+#include <vector>
 
 namespace input {
 
@@ -13,8 +15,15 @@ struct Pad {
 
 void Init();  // window thread, before boot; the game code window starts it earlier
 uint16_t HeldOnAnyController();  // face buttons as XINPUT_GAMEPAD_A/B/X/Y masks, GameInfo::pad left out
-// the controller on that port, then GameInfo::pad
-Pad Poll(int port);
+struct Controller {
+    uint32_t id;
+    std::string name;
+    int port;  // zero based, -1 while waiting for Start
+};
+std::vector<Controller> Controllers();
+void AssignController(uint32_t id, int port);
+// Only a guest state read consumes the Start press that claimed a port.
+Pad Poll(int port, bool read_state = false);
 void Rumble(int port, uint16_t left, uint16_t right);
 
 }  // namespace input

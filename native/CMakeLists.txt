@@ -38,6 +38,11 @@ set_property(SOURCE "${XBE_SDK_DIR}/runtime/app/main.cpp" APPEND PROPERTY
     COMPILE_DEFINITIONS wWinMain=HeroesGameMain)
 add_xbe_image(Heroes default.xbe heroes.toml 64 heroes)
 target_link_libraries(Heroes PRIVATE shell32)
+add_executable(controller_ports_test EXCLUDE_FROM_ALL
+    ../tests/native/controller_ports.cpp
+    "${XBE_SDK_DIR}/runtime/core/input.cpp")
+target_include_directories(controller_ports_test PRIVATE src/common "${XBE_SDK_DIR}/runtime")
+target_link_libraries(controller_ports_test PRIVATE SDL3::SDL3-static)
 # The SDK accepts a development DLL only when newer than its host executable.
 # An unchanged import library can otherwise let Ninja keep an older DLL after
 # a host-only change, triggering an unnecessary player-side compilation.

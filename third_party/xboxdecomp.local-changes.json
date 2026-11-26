@@ -27,10 +27,10 @@
     {
       "path": "runtime/xdk/xapi.cpp",
       "baseSha256": "e1aa9aa1971abfbc06eaeab13111553d685171244f20e260b1f68c8eebb7a907",
-      "patchedSha256": "1e6c3d5a832b25463494521ebe2fb674a5d5520cd9f97bc090fcbce293d56f33",
+      "patchedSha256": "19b67970647cc1dd821c1031ae338c36861bb6b556557ef42924229e72f6a65b",
       "patch": "patches/xboxdecomp-controller-discovery.patch",
-      "patchSha256": "a5ceca1be042222f4237f4ca7ca9a1aac24fceb49539617b18b578fa3891fe45",
-      "purpose": "Defer initial controller discovery to the existing poller so construction-time XGetDevices does not consume the initial insertion notification."
+      "patchSha256": "28d31e21c0102d11447a01035b9da1bbe78a198f2e5cb6b94f5a4db1eee8a2b9",
+      "purpose": "Defer initial discovery to the port poller and deliver a queued Start press on a guest state read."
     },
     {
       "path": "runtime/kernel/files.cpp",
@@ -95,6 +95,22 @@
       "purpose": "Measure title pacing separately; share a phase-aligned 60 Hz clock for vertical-blank waits and interrupts.",
       "patchedSha256": "a85bb33f9dbf26f4f298bbde14045bc88920f0ee2c4e3efded1512eab810f864",
       "patchSha256": "1f57836ff49161b1f9bce829183d8b51ee3a8b87b4872eb747b5cf2acfb3214f"
+    },
+    {
+      "path": "runtime/core/input.h",
+      "baseSha256": "9f5c88ad8d7e669bd331241a6a443bc4bca26dcea38056dcaa22f35374b04f71",
+      "patchedSha256": "dda09202aaefa6b3c366ec48b775bd30dab07dda16630ff1ce89456c3cd102df",
+      "patch": "patches/xboxdecomp-controller-ports.patch",
+      "purpose": "Detect physical controllers independently of Xbox ports and route input and vibration by Start order or manual assignment.",
+      "patchSha256": "8013d2f02b15a9e52219dfdd5025777cb67e21ac81b0baaf7eba1600c6550c27"
+    },
+    {
+      "path": "runtime/core/input.cpp",
+      "baseSha256": "70b4745af412fa31247232a632fb18875e101c5860456f5404d8f1e2d44b8dc5",
+      "patchedSha256": "b8d51ed48c04ad4efc0cb7e379f31279d2becfa697e2dd40a2b2b0fce546b642",
+      "patch": "patches/xboxdecomp-controller-ports.patch",
+      "purpose": "Detect physical controllers independently of Xbox ports and route input and vibration by Start order or manual assignment.",
+      "patchSha256": "8013d2f02b15a9e52219dfdd5025777cb67e21ac81b0baaf7eba1600c6550c27"
     }
   ],
   "additions": [

@@ -145,6 +145,8 @@ The mouse cursor hides over the active game window. It returns when you Alt-Tab 
 
 Click the game window before using the keyboard. A virtual controller occupies player one's port and merges keyboard input with SDL gamepad input. Keyboard input releases when the window loses focus.
 
+A lone controller automatically shares player 1. With multiple controllers, press START on each in the desired player order. Open **F11 → Controllers** or **F11 → Keyboard** to see detected controllers and change their ports. For keyboard and controller co-op, leave the keyboard on player 1 and select player 2 for the controller. Assignments last for the current connection.
+
 | Keyboard | Xbox input |
 | --- | --- |
 | Enter | Start / pause |
