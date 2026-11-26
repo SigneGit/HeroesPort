@@ -12,6 +12,7 @@ inline constexpr const char* key_labels[24]{"D-pad up","D-pad down","D-pad left"
     "Left stick click","Right stick click","A / confirm","B / cancel","X","Y","Black / RB","White / LB","Left trigger","Right trigger",
     "Move left","Move right","Move down","Move up","Camera left","Camera right","Camera down","Camera up"};
 void DrawOptions(double fps);
+void InitializeCursor(void* window);
 bool WindowMessage(void*,uint32_t,uintptr_t,intptr_t,intptr_t*);
 void LoadOptions(const void*);
 void SaveOptions(void*);

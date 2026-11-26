@@ -15,12 +15,32 @@
 namespace heroes {
 namespace {
 int learning=-1;
+constexpr UINT refresh_cursor=WM_APP+0x410;
+
+void SetClientCursor(HWND window) {
+    const bool hide=GetForegroundWindow()==window && GetFocus()==window &&
+                    !menu_open.load() && !exit_prompt_open.load();
+    SetCursor(hide ? nullptr : LoadCursorW(nullptr,IDC_ARROW));
+}
+
+void RefreshCursor(HWND window) {
+    POINT point;
+    RECT client;
+    if(GetCursorPos(&point) && WindowFromPoint(point)==window &&
+       ScreenToClient(window,&point) && GetClientRect(window,&client) && PtInRect(&client,point))
+        SetClientCursor(window);
+}
 std::string KeyName(uint32_t key) {
     char name[64]{};LONG scan=LONG(MapVirtualKeyA(key,MAPVK_VK_TO_VSC)<<16);
     if(key>=VK_PRIOR&&key<=VK_DOWN)scan|=1<<24;
     if(!GetKeyNameTextA(scan,name,64))snprintf(name,64,"Key %u",key);
     return name;
 }
+}
+void InitializeCursor(void* window) {
+    // The Win32 window thread owns the cursor, including between rendered frames.
+    ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
+    RefreshCursor(static_cast<HWND>(window));
 }
 void LoadOptions(const void* data) {
     auto& t=*static_cast<const toml::table*>(data);
@@ -37,6 +57,17 @@ void SaveOptions(void* data) {
     static_cast<toml::table*>(data)->insert_or_assign("keyboard",std::move(a));
 }
 bool WindowMessage(void* handle,uint32_t msg,uintptr_t key,intptr_t lp,intptr_t* result) {
+    const auto window=static_cast<HWND>(handle);
+    if(msg==WM_SETCURSOR && reinterpret_cast<HWND>(key)==window && LOWORD(lp)==HTCLIENT) {
+        SetClientCursor(window);
+        *result=TRUE;
+        return true;
+    }
+    if(msg==WM_KILLFOCUS || (msg==WM_ACTIVATE && LOWORD(key)==WA_INACTIVE)) {
+        if(!GetCursor())SetCursor(LoadCursorW(nullptr,IDC_ARROW));
+    } else if(msg==WM_SETFOCUS || msg==WM_ACTIVATE || msg==refresh_cursor) {
+        RefreshCursor(window);
+    }
     if(msg==WM_KEYDOWN&&key==VK_ESCAPE&&!(lp&(intptr_t(1)<<30))&&
        main_menu_active.load()&&!menu_open.load()&&!exit_prompt_open.exchange(true)) {
         // A native modal dialog pumps messages. Do not hold UiLock while it is
@@ -44,11 +75,11 @@ bool WindowMessage(void* handle,uint32_t msg,uintptr_t key,intptr_t lp,intptr_t*
         const int choice=MessageBoxW(static_cast<HWND>(handle),L"Do you want to close Dungeons & Dragons: Heroes?",
                                      L"Close game?",MB_YESNO|MB_ICONQUESTION|MB_DEFBUTTON2);
         if(choice==IDYES)PostMessageW(static_cast<HWND>(handle),WM_CLOSE,0,0);
-        exit_prompt_open=false;*result=0;return true;
+        exit_prompt_open=false;RefreshCursor(window);*result=0;return true;
     }
     if(msg==WM_KEYDOWN&&!(lp&(intptr_t(1)<<30))) {
         std::lock_guard lock(app::UiLock());
-        if(key==VK_F11){menu_open=!menu_open.load();learning=-1;*result=0;return true;}
+        if(key==VK_F11){menu_open=!menu_open.load();learning=-1;RefreshCursor(window);*result=0;return true;}
         if(menu_open&&learning>=0){
             if(key!=VK_ESCAPE&&key!=VK_F3&&key>0&&key<255){keys[learning]=uint32_t(key);app::Save();}
             learning=-1;*result=0;return true;
@@ -72,7 +103,7 @@ void DrawOptions(double fps) {
         ImGui::Text("%.1f FPS  |  %.2f ms",fps,fps>0?1000.0/fps:0);
         ImGui::End();
     }
-    bool open=menu_open.load();ImGui::GetIO().MouseDrawCursor=open;
+    bool open=menu_open.load();
     if(!open)return;
     ImGui::SetNextWindowSize(ImVec2(550,530),ImGuiCond_FirstUseEver);
     if(ImGui::Begin("D&D Heroes - PC options (F11)",&open)) {
@@ -168,6 +199,10 @@ void DrawOptions(double fps) {
         }
         ImGui::Separator();ImGui::TextWrapped("Game input is released while this menu is open. The game continues running; use Start to pause first.");
     }
-    ImGui::End();menu_open=open;
+    ImGui::End();
+    if(!open) {
+        menu_open=false;
+        PostMessageW(static_cast<HWND>(app::Window()),refresh_cursor,0,0);
+    }
 }
 }

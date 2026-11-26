@@ -141,6 +141,8 @@ To rebuild after source changes, run `.\tools\build-native.ps1` again. To config
 
 ## Controls and PC options
 
+The mouse cursor hides over the active game window. It returns when you Alt-Tab away, open F11 options, or see the quit prompt.
+
 Click the game window before using the keyboard. A virtual controller occupies player one's port and merges keyboard input with SDL gamepad input. Keyboard input releases when the window loses focus.
 
 | Keyboard | Xbox input |
