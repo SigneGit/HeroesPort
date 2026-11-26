@@ -1,0 +1,78 @@
+--- a/runtime/kernel/files.cpp
++++ b/runtime/kernel/files.cpp
+@@ -9,6 +9,7 @@
+ #include "kernel/disc.h"
+ #include "kernel/kernel.h"
+ #include "kernel/exports.h"
++#include "kernel/volume_geometry.h"
+ 
+ namespace fs = std::filesystem;
+ 
+@@ -591,21 +592,35 @@ KERNEL_EXPORT(226, NtSetInformationFile, 5) {
+ 
+ KERNEL_EXPORT(218, NtQueryVolumeInformationFile, 5) {
+     uint32_t iosb = a[1], out = a[2], len = a[3], cls = a[4];
++    auto f = FileFromHandle(a[0]);
++    if (!f) return kInvalidHandle;
++    uint32_t need = cls == 7 ? 0x20 : cls == 5 ? 0x10 : 0x18;
++    if (len < need) return kBufferTooSmall;
++    VolumeGeometry geometry{};
++    if (cls == 3 || cls == 7) {
++        std::error_code ec;
++        auto space = fs::space(f->entry ? g_devices.at(kCdRom) : f->host, ec);
++        if (ec) {
++            IoStatus(iosb, kUnsuccessful, 0);
++            return kUnsuccessful;
++        }
++        geometry = MakeVolumeGeometry(space.capacity, space.available);
++    }
+     std::memset(HostPtr(out), 0, len);
+     switch (cls) {
+-        case 3:  // FileFsSizeInformation: 16 GiB total, 8 GiB free in 16 KiB units
+-            W64(out, 0x100000);
+-            W64(out + 8, 0x80000);
+-            W32(out + 0x10, 32);
+-            W32(out + 0x14, 512);
++        case 3:  // FileFsSizeInformation
++            W64(out, geometry.total_units);
++            W64(out + 8, geometry.available_units);
++            W32(out + 0x10, VolumeGeometry::sectors_per_unit);
++            W32(out + 0x14, VolumeGeometry::bytes_per_sector);
+             IoStatus(iosb, kSuccess, 0x18);
+             return kSuccess;
+         case 7:  // FileFsFullSizeInformation
+-            W64(out, 0x100000);
+-            W64(out + 8, 0x80000);
+-            W64(out + 0x10, 0x80000);
+-            W32(out + 0x18, 32);
+-            W32(out + 0x1C, 512);
++            W64(out, geometry.total_units);
++            W64(out + 8, geometry.available_units);
++            W64(out + 0x10, geometry.available_units);
++            W32(out + 0x18, VolumeGeometry::sectors_per_unit);
++            W32(out + 0x1C, VolumeGeometry::bytes_per_sector);
+             IoStatus(iosb, kSuccess, 0x20);
+             return kSuccess;
+         case 1:  // FileFsVolumeInformation
+--- /dev/null
++++ b/runtime/kernel/volume_geometry.h
+@@ -0,0 +1,19 @@
++#pragma once
++#include <algorithm>
++#include <cstdint>
++
++namespace kernel {
++struct VolumeGeometry {
++    uint64_t total_units, available_units;
++    static constexpr uint32_t sectors_per_unit = 32, bytes_per_sector = 512;
++    static constexpr uint64_t unit_bytes = sectors_per_unit * bytes_per_sector;
++};
++
++// FATX-facing capacity must fit the 32-bit byte arithmetic used by some XAPI
++// clients (including Heroes). Round down, and never promise unavailable host space.
++inline VolumeGeometry MakeVolumeGeometry(uint64_t capacity, uint64_t available) {
++    constexpr uint64_t max_bytes = 0xFFFFC000ull;
++    uint64_t total = std::min(capacity, max_bytes) / VolumeGeometry::unit_bytes;
++    return {total, std::min(available / VolumeGeometry::unit_bytes, total)};
++}
++}  // namespace kernel

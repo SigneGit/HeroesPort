@@ -1,0 +1,232 @@
+{
+  "$schema": "https://recomplauncher.com/schema/recomplauncher.json",
+  "format": 1,
+  "name": "Dungeons & Dragons: Heroes",
+  "inputs": [
+    {
+      "id": "game",
+      "role": "game",
+      "label": "Your USA Xbox ISO (XISO) or complete extracted game folder.",
+      "formats": [
+        {
+          "type": "file",
+          "extensions": [
+            "iso",
+            "xiso"
+          ]
+        },
+        {
+          "type": "folder"
+        }
+      ],
+      "check": {
+        "file": "default.xbe",
+        "xdvdfs": "default.xbe"
+      },
+      "dumps": [
+        { "name": "USA (full disc)", "size": 7825162240, "crc32": "4140e4e7" }
+      ]
+    }
+  ],
+  "start": {
+    "env": { "SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS": "0" },
+    "program": [
+      "Heroes.exe"
+    ]
+  },
+  "prepare": {
+    "program": [
+      "Heroes.exe"
+    ],
+    "args": [
+      "--prepare",
+      "--game={input:game}"
+    ],
+    "label": "Verify Xbox files and compile the game",
+    "done": [
+      "{install}/heroes-ready.json",
+      "{install}/Heroes.dll",
+      "{install}/assets/.heroes-import.json",
+      "{install}/assets/default.xbe"
+    ],
+    "keeps_copy": true
+  },
+  "saves": [
+    "{install}/hdd/E/UDATA/49470013",
+    "{install}/hdd/E/TDATA/49470013"
+  ],
+  "folders": {
+    "game": [
+      {
+        "path": "{install}/assets"
+      }
+    ],
+    "logs": [
+      {
+        "path": "{install}/logs"
+      }
+    ]
+  },
+  "system": {
+    "windows": {
+      "graphics": {
+        "d3d12": "11_0"
+      }
+    }
+  },
+  "config": [
+    {
+      "format": "toml",
+      "file": [
+        {
+          "path": "{install}/heroes-settings.toml"
+        }
+      ]
+    }
+  ],
+  "settings": [
+    {
+      "id": "display_mode",
+      "label": "Display mode",
+      "group": "Graphics",
+      "defaults": {
+        "display_mode": "\"borderless\""
+      },
+      "choices": [
+        { "label": "Borderless", "set": { "display_mode": "\"borderless\"" } },
+        { "label": "Fullscreen", "set": { "display_mode": "\"fullscreen\"" } },
+        { "label": "Windowed", "set": { "display_mode": "\"windowed\"" } }
+      ]
+    },
+    {
+      "id": "resolution",
+      "label": "Output resolution",
+      "group": "Graphics",
+      "defaults": {
+        "width": "0",
+        "height": "0"
+      },
+      "choices": [
+        { "label": "Desktop", "set": { "width": "0", "height": "0" } },
+        { "label": "1280 × 720", "set": { "width": "1280", "height": "720" } },
+        { "label": "1600 × 900", "set": { "width": "1600", "height": "900" } },
+        { "label": "1920 × 1080", "set": { "width": "1920", "height": "1080" } },
+        { "label": "2560 × 1440", "set": { "width": "2560", "height": "1440" } },
+        { "label": "3840 × 2160", "set": { "width": "3840", "height": "2160" } }
+      ]
+    },
+    {
+      "id": "render_percent",
+      "label": "Render scale",
+      "group": "Graphics",
+      "defaults": {
+        "render_percent": "100"
+      },
+      "choices": [
+        { "label": "50%", "set": { "render_percent": "50" } },
+        { "label": "67%", "set": { "render_percent": "67" } },
+        { "label": "75%", "set": { "render_percent": "75" } },
+        { "label": "100%", "set": { "render_percent": "100" } },
+        { "label": "125%", "set": { "render_percent": "125" } },
+        { "label": "150%", "set": { "render_percent": "150" } },
+        { "label": "200%", "set": { "render_percent": "200" } }
+      ]
+    },
+    {
+      "id": "anisotropic_filtering",
+      "label": "Texture filtering",
+      "group": "Graphics",
+      "defaults": {
+        "anisotropic_filtering": "0"
+      },
+      "choices": [
+        { "label": "Game default", "set": { "anisotropic_filtering": "0" } },
+        { "label": "2×", "set": { "anisotropic_filtering": "2" } },
+        { "label": "4×", "set": { "anisotropic_filtering": "4" } },
+        { "label": "8×", "set": { "anisotropic_filtering": "8" } },
+        { "label": "16×", "set": { "anisotropic_filtering": "16" } }
+      ]
+    },
+    {
+      "id": "fps_cap",
+      "label": "Frame rate limit",
+      "group": "Graphics",
+      "help": "60 FPS is recommended. Higher rates have not been validated against game timing.",
+      "defaults": {
+        "fps_cap": "60"
+      },
+      "choices": [
+        { "label": "60 FPS", "set": { "fps_cap": "60" } },
+        { "label": "30 FPS", "set": { "fps_cap": "30" } },
+        { "label": "Monitor refresh rate", "set": { "fps_cap": "1" } },
+        { "label": "Unlimited", "set": { "fps_cap": "0" } }
+      ]
+    },
+    {
+      "id": "vsync",
+      "label": "VSync",
+      "group": "Graphics",
+      "defaults": {
+        "vsync": "true"
+      },
+      "choices": [
+        { "label": "Off", "set": { "vsync": "false" } },
+        { "label": "On", "set": { "vsync": "true" } }
+      ]
+    },
+    {
+      "id": "show_fps",
+      "label": "Show FPS",
+      "group": "Graphics",
+      "defaults": {
+        "show_fps": "false"
+      },
+      "choices": [
+        { "label": "Off", "set": { "show_fps": "false" } },
+        { "label": "On", "set": { "show_fps": "true" } }
+      ]
+    },
+    {
+      "id": "skip_boot_videos",
+      "label": "Skip boot videos",
+      "group": "Startup",
+      "defaults": {
+        "skip_boot_videos": "false"
+      },
+      "choices": [
+        { "label": "Off", "set": { "skip_boot_videos": "false" } },
+        { "label": "On", "set": { "skip_boot_videos": "true" } }
+      ]
+    },
+    {
+      "id": "controller_rumble",
+      "label": "Controller rumble",
+      "group": "Controls",
+      "defaults": {
+        "controller_rumble": "true"
+      },
+      "choices": [
+        { "label": "Off", "set": { "controller_rumble": "false" } },
+        { "label": "On", "set": { "controller_rumble": "true" } }
+      ]
+    },
+    {
+      "id": "stick_deadzone_percent",
+      "label": "Stick deadzone (%)",
+      "group": "Controls",
+      "slider": {
+        "key": "stick_deadzone_percent",
+        "min": 0,
+        "max": 40,
+        "step": 1,
+        "format": "%.0f"
+      },
+      "defaults": {
+        "stick_deadzone_percent": "15"
+      }
+    }
+  ],
+  "exit_codes": {
+    "1": "Game startup failed. Check the latest Heroes log and run Easy Setup again if the game files are missing."
+  }
+}

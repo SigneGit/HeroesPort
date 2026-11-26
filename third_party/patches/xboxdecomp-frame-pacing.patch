@@ -1,0 +1,48 @@
+--- a/runtime/app/main.cpp
++++ b/runtime/app/main.cpp
+@@ -20,6 +20,7 @@
+ 
+ #include "app/app.h"
+ #include "core/input.h"
++#include "core/diag.h"
+ #include "core/log.h"
+ #include "gpu/backend.h"
+ #include "image_symbols.h"
+@@ -235,6 +236,8 @@ void Pace() {
+     if (next < now - period) next = now;
+     while (clock::now() + std::chrono::milliseconds(2) < next) Sleep(1);
+     while (clock::now() < next) std::this_thread::yield();
++    if (diag::Perf()) gpu::g_perf_pace_ns +=
++        std::chrono::duration_cast<std::chrono::nanoseconds>(clock::now() - now).count();
+ }
+ 
+ }  // namespace app
+--- a/runtime/gpu/backend.h
++++ b/runtime/gpu/backend.h
+@@ -65,6 +65,7 @@ std::unique_ptr<Backend> CreateThreadedBackend(std::unique_ptr<Backend> inner);
+ inline std::atomic<uint64_t> g_perf_capture_ns{0}, g_perf_wait_ns{0}, g_perf_waits{0};
+ inline std::atomic<uint64_t> g_perf_wait_kind_ns[6];  // read-back, resource, fence, flush, copy, next frame
+ inline std::atomic<uint64_t> g_perf_sync_late{0}, g_perf_sync_block{0};  // read-backs the title waited for, by cause
++inline std::atomic<uint64_t> g_perf_vblank_ns{0}, g_perf_vblank_calls{0}, g_perf_pace_ns{0};
+ 
+ // F3: save the next frame, every draw and target, under diag::CaptureDir
+ inline std::atomic<bool> g_capture{false};
+--- /dev/null
++++ b/runtime/core/frame_clock.h
+@@ -0,0 +1,16 @@
++#pragma once
++#include <chrono>
++#include <cstdint>
++
++namespace frame_clock {
++// One NTSC clock shared by the interrupt and explicit vertical-blank waits.
++// Waiting after doing work must consume the remainder of a refresh, not add
++// another whole refresh to every frame. Integer division avoids accumulated drift.
++inline constexpr int64_t kPeriodNs = 1000000000ll / 60;
++inline int64_t NextTickNs(int64_t now) { return (now / kPeriodNs + 1) * kPeriodNs; }
++inline std::chrono::steady_clock::time_point NextTick(std::chrono::steady_clock::time_point now) {
++    auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(now.time_since_epoch()).count();
++    return std::chrono::steady_clock::time_point(
++        std::chrono::duration_cast<std::chrono::steady_clock::duration>(std::chrono::nanoseconds(NextTickNs(ns))));
++}
++}  // namespace frame_clock

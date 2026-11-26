@@ -1,0 +1,17 @@
+{
+  "xbeSha256": "f48303a89fa9e2043d301ee6444ae69602570a03f1dd3de386f88928b5478ece",
+  "bridges": [
+    {
+      "address": "0x00058957",
+      "name": "XMountUtilityDrive",
+      "argumentBytes": 4,
+      "note": "ABI inferred from this build's caller, disassembly, Z: link creation and ret 4. Host bridge mounts a private cache instead of emulating FATX disk formatting."
+    },
+    {
+      "address": "0x00221fa4",
+      "name": "CrtPowX87",
+      "argumentBytes": 0,
+      "note": "Internal CRT helper inferred from its pow implementation and caller: exponent in ST0, base in ST1, result replaces both. Uses host binary64 Math.pow; not bit-exact x87 transcendental emulation."
+    }
+  ]
+}

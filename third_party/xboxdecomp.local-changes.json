@@ -1,0 +1,120 @@
+{
+  "changes": [
+    {
+      "path": "tools/symbols/main.cpp",
+      "baseSha256": "c880320e4c8137918d829148aeba16bd15219c46d4078cd219c2f795625e06ec",
+      "patchedSha256": "6a233933ed9d734f8e74985e72d6f570b3499a4341c8d46c9c8eb18f8f8679f1",
+      "patch": "patches/xboxdecomp-reference-scan.patch",
+      "patchSha256": "ff5b446bc133eab9420a7445e4874654a3c34c5c29c3040fafbadd75ed5bcb36",
+      "purpose": "Explicit cross-build reference scans and evidence output; default SDK scanning behavior is retained."
+    },
+    {
+      "path": "runtime/xdk/dsound.cpp",
+      "baseSha256": "db2e1aca1e5ac104d26404ada6608ebbca6d10cfd273be33984d7d74a01d3929",
+      "patchedSha256": "d3c96a6fa3c1540cc41ac9d3ed4b1b3651e7c2926fa4cb7f6375b2ea7a59967f",
+      "patch": "patches/xboxdecomp-buffer-notifications.patch",
+      "patchSha256": "af4ce8ce98b0bb350b29106f0cfd9bd09e5ed5adb7c6d3a5ed837914129dcccc",
+      "purpose": "Buffer playback-position and stop notifications delivered through guest event handles."
+    },
+    {
+      "path": "runtime/core/log.cpp",
+      "baseSha256": "f15b3b1e55d3cd8cde4cccafc5afbf876567b6406eef3821c316922dedad52e3",
+      "patchedSha256": "e02c7c68875857baa811396dbbb0d55fcb4f4e532dcbcd341a85bafc6150f12e",
+      "patch": "patches/xboxdecomp-verbose-log.patch",
+      "patchSha256": "f2db609378a211e905b29c4e4271ebec9a2ef2982a24efc3fd1194fc79367062",
+      "purpose": "Opt-in XBE_VERBOSE release diagnostics; normal player logging remains unchanged."
+    },
+    {
+      "path": "runtime/xdk/xapi.cpp",
+      "baseSha256": "e1aa9aa1971abfbc06eaeab13111553d685171244f20e260b1f68c8eebb7a907",
+      "patchedSha256": "1e6c3d5a832b25463494521ebe2fb674a5d5520cd9f97bc090fcbce293d56f33",
+      "patch": "patches/xboxdecomp-controller-discovery.patch",
+      "patchSha256": "a5ceca1be042222f4237f4ca7ca9a1aac24fceb49539617b18b578fa3891fe45",
+      "purpose": "Defer initial controller discovery to the existing poller so construction-time XGetDevices does not consume the initial insertion notification."
+    },
+    {
+      "path": "runtime/kernel/files.cpp",
+      "baseSha256": "011174de060c6f3791b88c2b8daf101e182a8ef95b228446abd917fcb751ae0e",
+      "patchedSha256": "c8a7ffe9d70e095f436c137555cbe4def2f9d03199af8dbc48e4edfb4d3f017d",
+      "patch": "patches/xboxdecomp-volume-geometry.patch",
+      "patchSha256": "e94cf567b4161e5e5a4ece71d97e9347d40f4fdbe8bd757db6664cca694e8755",
+      "purpose": "Report host-bounded FATX geometry below 4 GiB so Heroes 32-bit byte-count calculations do not wrap to zero; validate volume handles and output lengths."
+    },
+    {
+      "path": "runtime/gpu/d3d12.cpp",
+      "baseSha256": "3ef6fba13ad8d8af54f6e4bfc763a57a4dca8c34515cc29b96bd7e2f79a84e7d",
+      "patchedSha256": "4e96855a2daada81a337a4f9d9265ca94b675cbaebf07597bc27d0b372448596",
+      "patch": "patches/xboxdecomp-render-capture.patch",
+      "purpose": "Preserve current diffuse vertex color for draws without a diffuse input array; detailed opt-in captures retain texture/vertex/sampler state and the current color. Log title vertical-blank and frame-cap pacing separately from renderer work.",
+      "patchSha256": "fa525fa8a6e2a416dd6751760f3403673fc4df1c522d26192e8f17168b8f96f6"
+    },
+    {
+      "path": "runtime/xdk/d3d8.cpp",
+      "baseSha256": "791cfc339570f3ec39632c95ea2e9eba846860b2471163e96a045bd47aa2bb4b",
+      "patchedSha256": "3b883ebe0a87ca2449e3dc88379c023d899008c84e9519310190a15006386bd8",
+      "patch": "patches/xboxdecomp-render-capture.patch",
+      "purpose": "Preserve current diffuse vertex color for draws without a diffuse input array; detailed opt-in captures retain texture/vertex/sampler state and the current color. Vertical-blank waits now consume the remaining refresh interval instead of adding a full 16 ms sleep.",
+      "patchSha256": "fa525fa8a6e2a416dd6751760f3403673fc4df1c522d26192e8f17168b8f96f6"
+    },
+    {
+      "path": "runtime/gpu/state.h",
+      "baseSha256": "b32f7e79f7a05e9219bd580a4f9839a89d1fc9ed04b62d8ef44910149650633b",
+      "patchedSha256": "e4132d9676bd723fafcb882aee680ad0c2169c90c208da18bdb88830ca200f7f",
+      "patch": "patches/xboxdecomp-render-capture.patch",
+      "purpose": "Preserve current diffuse vertex color for draws without a diffuse input array; detailed opt-in captures retain texture/vertex/sampler state and the current color.",
+      "patchSha256": "fa525fa8a6e2a416dd6751760f3403673fc4df1c522d26192e8f17168b8f96f6"
+    },
+    {
+      "path": "runtime/gpu/shaders.h",
+      "baseSha256": "e3b10be6ff084791abf6b189a81bc89145d60037feada132cd3692796524109d",
+      "patchedSha256": "a76d5cf8f0e79bae6e5e854a4651fd7e48ac2797603ba9e71f6da4e26cc17177",
+      "patch": "patches/xboxdecomp-render-capture.patch",
+      "purpose": "Preserve current diffuse vertex color for draws without a diffuse input array; detailed opt-in captures retain texture/vertex/sampler state and the current color.",
+      "patchSha256": "fa525fa8a6e2a416dd6751760f3403673fc4df1c522d26192e8f17168b8f96f6"
+    },
+    {
+      "path": "runtime/gpu/shaders.cpp",
+      "baseSha256": "44161298d3eabc2332da1eae4837608a64ee2a281a266b70fd8fcbe572727532",
+      "patchedSha256": "ffc9ca69a274a720c9e6816f553885578814b5516cbd069c8ca2f794456e21a4",
+      "patch": "patches/xboxdecomp-render-capture.patch",
+      "purpose": "Preserve current diffuse vertex color for draws without a diffuse input array; detailed opt-in captures retain texture/vertex/sampler state and the current color.",
+      "patchSha256": "fa525fa8a6e2a416dd6751760f3403673fc4df1c522d26192e8f17168b8f96f6"
+    },
+    {
+      "path": "runtime/app/main.cpp",
+      "baseSha256": "4ebf29ca4bcdc94a25ca246cd17e7efb4adcad16891ca7a229c181104fad56e0",
+      "patch": "patches/xboxdecomp-frame-pacing.patch",
+      "purpose": "Measure title pacing separately; share a phase-aligned 60 Hz clock for vertical-blank waits and interrupts.",
+      "patchedSha256": "75e25efdb563b1b95ea3ca66e8d460d148be7da833eceebacd07cfe275ccb257",
+      "patchSha256": "1f57836ff49161b1f9bce829183d8b51ee3a8b87b4872eb747b5cf2acfb3214f"
+    },
+    {
+      "path": "runtime/gpu/backend.h",
+      "baseSha256": "8d798ce1b99aebcdcdaa8fe4c72b3fe4bb22c6e121f2c5b0ffd6b08d4a133e1f",
+      "patch": "patches/xboxdecomp-frame-pacing.patch",
+      "purpose": "Measure title pacing separately; share a phase-aligned 60 Hz clock for vertical-blank waits and interrupts.",
+      "patchedSha256": "a85bb33f9dbf26f4f298bbde14045bc88920f0ee2c4e3efded1512eab810f864",
+      "patchSha256": "1f57836ff49161b1f9bce829183d8b51ee3a8b87b4872eb747b5cf2acfb3214f"
+    }
+  ],
+  "additions": [
+    {
+      "path": "runtime/audio/buffer_notifications.h",
+      "sha256": "689a1ef205da9c1ff153d2d3e909910e688c6952495a641d39f37625bbfab535",
+      "patch": "patches/xboxdecomp-buffer-notifications.patch",
+      "patchSha256": "af4ce8ce98b0bb350b29106f0cfd9bd09e5ed5adb7c6d3a5ed837914129dcccc"
+    },
+    {
+      "path": "runtime/kernel/volume_geometry.h",
+      "sha256": "0d3b9a924b49a3061ceb9b5e911cdaefc0f8eb751b054580d3a9bb0f5dbd0b74",
+      "patch": "patches/xboxdecomp-volume-geometry.patch",
+      "patchSha256": "e94cf567b4161e5e5a4ece71d97e9347d40f4fdbe8bd757db6664cca694e8755"
+    },
+    {
+      "path": "runtime/core/frame_clock.h",
+      "patch": "patches/xboxdecomp-frame-pacing.patch",
+      "sha256": "b581441b108ccdfe9c78044482d3301997bd29bcfc582ff2b36b6e017e85651c",
+      "patchSha256": "1f57836ff49161b1f9bce829183d8b51ee3a8b87b4872eb747b5cf2acfb3214f"
+    }
+  ]
+}

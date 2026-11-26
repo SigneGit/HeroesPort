@@ -1,0 +1,2606 @@
+{
+  "source": "https://raw.githubusercontent.com/XboxDev/nxdk/fafbe41b48fa00a31b79dd49ad1f86a30adcdd9e/lib/xboxkrnl/xboxkrnl.exe.def",
+  "revision": "fafbe41b48fa00a31b79dd49ad1f86a30adcdd9e",
+  "license": "CC0-1.0",
+  "attribution": "XboxDev/nxdk; export table copyright 2017 Stefan Schmidt",
+  "sha256": "8aa3e48417c8a60aea8d1953bcc0674cdee95ce9a11e5e861d3107c3339d2527",
+  "services": [
+    {
+      "ordinal": 1,
+      "name": "AvGetSavedDataAddress",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 0
+    },
+    {
+      "ordinal": 2,
+      "name": "AvSendTVEncoderOption",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 16
+    },
+    {
+      "ordinal": 3,
+      "name": "AvSetDisplayMode",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 24
+    },
+    {
+      "ordinal": 4,
+      "name": "AvSetSavedDataAddress",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 5,
+      "name": "DbgBreakPoint",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 0
+    },
+    {
+      "ordinal": 6,
+      "name": "DbgBreakPointWithStatus",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 7,
+      "name": "DbgLoadImageSymbols",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 8,
+      "name": "DbgPrint",
+      "kind": "function",
+      "convention": "cdecl",
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 9,
+      "name": "HalReadSMCTrayState",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 10,
+      "name": "DbgPrompt",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 11,
+      "name": "DbgUnLoadImageSymbols",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 12,
+      "name": "ExAcquireReadWriteLockExclusive",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 13,
+      "name": "ExAcquireReadWriteLockShared",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 14,
+      "name": "ExAllocatePool",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 15,
+      "name": "ExAllocatePoolWithTag",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 16,
+      "name": "ExEventObjectType",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 17,
+      "name": "ExFreePool",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 18,
+      "name": "ExInitializeReadWriteLock",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 19,
+      "name": "ExInterlockedAddLargeInteger",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 16
+    },
+    {
+      "ordinal": 20,
+      "name": "ExInterlockedAddLargeStatistic",
+      "kind": "function",
+      "convention": "fastcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 21,
+      "name": "ExInterlockedCompareExchange64",
+      "kind": "function",
+      "convention": "fastcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 22,
+      "name": "ExMutantObjectType",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 23,
+      "name": "ExQueryPoolBlockSize",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 24,
+      "name": "ExQueryNonVolatileSetting",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 20
+    },
+    {
+      "ordinal": 25,
+      "name": "ExReadWriteRefurbInfo",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 26,
+      "name": "ExRaiseException",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 27,
+      "name": "ExRaiseStatus",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 28,
+      "name": "ExReleaseReadWriteLock",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 29,
+      "name": "ExSaveNonVolatileSetting",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 16
+    },
+    {
+      "ordinal": 30,
+      "name": "ExSemaphoreObjectType",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 31,
+      "name": "ExTimerObjectType",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 32,
+      "name": "ExfInterlockedInsertHeadList",
+      "kind": "function",
+      "convention": "fastcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 33,
+      "name": "ExfInterlockedInsertTailList",
+      "kind": "function",
+      "convention": "fastcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 34,
+      "name": "ExfInterlockedRemoveHeadList",
+      "kind": "function",
+      "convention": "fastcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 35,
+      "name": "FscGetCacheSize",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 0
+    },
+    {
+      "ordinal": 36,
+      "name": "FscInvalidateIdleBlocks",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 0
+    },
+    {
+      "ordinal": 37,
+      "name": "FscSetCacheSize",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 38,
+      "name": "HalClearSoftwareInterrupt",
+      "kind": "function",
+      "convention": "fastcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 39,
+      "name": "HalDisableSystemInterrupt",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 40,
+      "name": "HalDiskCachePartitionCount",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 41,
+      "name": "HalDiskModelNumber",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 42,
+      "name": "HalDiskSerialNumber",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 43,
+      "name": "HalEnableSystemInterrupt",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 44,
+      "name": "HalGetInterruptVector",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 45,
+      "name": "HalReadSMBusValue",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 16
+    },
+    {
+      "ordinal": 46,
+      "name": "HalReadWritePCISpace",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 24
+    },
+    {
+      "ordinal": 47,
+      "name": "HalRegisterShutdownNotification",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 48,
+      "name": "HalRequestSoftwareInterrupt",
+      "kind": "function",
+      "convention": "fastcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 49,
+      "name": "HalReturnToFirmware",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 50,
+      "name": "HalWriteSMBusValue",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 16
+    },
+    {
+      "ordinal": 51,
+      "name": "InterlockedCompareExchange",
+      "kind": "function",
+      "convention": "fastcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 52,
+      "name": "InterlockedDecrement",
+      "kind": "function",
+      "convention": "fastcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 53,
+      "name": "InterlockedIncrement",
+      "kind": "function",
+      "convention": "fastcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 54,
+      "name": "InterlockedExchange",
+      "kind": "function",
+      "convention": "fastcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 55,
+      "name": "InterlockedExchangeAdd",
+      "kind": "function",
+      "convention": "fastcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 56,
+      "name": "InterlockedFlushSList",
+      "kind": "function",
+      "convention": "fastcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 57,
+      "name": "InterlockedPopEntrySList",
+      "kind": "function",
+      "convention": "fastcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 58,
+      "name": "InterlockedPushEntrySList",
+      "kind": "function",
+      "convention": "fastcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 59,
+      "name": "IoAllocateIrp",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 60,
+      "name": "IoBuildAsynchronousFsdRequest",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 24
+    },
+    {
+      "ordinal": 61,
+      "name": "IoBuildDeviceIoControlRequest",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 36
+    },
+    {
+      "ordinal": 62,
+      "name": "IoBuildSynchronousFsdRequest",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 28
+    },
+    {
+      "ordinal": 63,
+      "name": "IoCheckShareAccess",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 20
+    },
+    {
+      "ordinal": 64,
+      "name": "IoCompletionObjectType",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 65,
+      "name": "IoCreateDevice",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 24
+    },
+    {
+      "ordinal": 66,
+      "name": "IoCreateFile",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 40
+    },
+    {
+      "ordinal": 67,
+      "name": "IoCreateSymbolicLink",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 68,
+      "name": "IoDeleteDevice",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 69,
+      "name": "IoDeleteSymbolicLink",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 70,
+      "name": "IoDeviceObjectType",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 71,
+      "name": "IoFileObjectType",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 72,
+      "name": "IoFreeIrp",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 73,
+      "name": "IoInitializeIrp",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 74,
+      "name": "IoInvalidDeviceRequest",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 75,
+      "name": "IoQueryFileInformation",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 20
+    },
+    {
+      "ordinal": 76,
+      "name": "IoQueryVolumeInformation",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 20
+    },
+    {
+      "ordinal": 77,
+      "name": "IoQueueThreadIrp",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 78,
+      "name": "IoRemoveShareAccess",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 79,
+      "name": "IoSetIoCompletion",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 20
+    },
+    {
+      "ordinal": 80,
+      "name": "IoSetShareAccess",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 16
+    },
+    {
+      "ordinal": 81,
+      "name": "IoStartNextPacket",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 82,
+      "name": "IoStartNextPacketByKey",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 83,
+      "name": "IoStartPacket",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 84,
+      "name": "IoSynchronousDeviceIoControlRequest",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 32
+    },
+    {
+      "ordinal": 85,
+      "name": "IoSynchronousFsdRequest",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 20
+    },
+    {
+      "ordinal": 86,
+      "name": "IofCallDriver",
+      "kind": "function",
+      "convention": "fastcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 87,
+      "name": "IofCompleteRequest",
+      "kind": "function",
+      "convention": "fastcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 88,
+      "name": "KdDebuggerEnabled",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 89,
+      "name": "KdDebuggerNotPresent",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 90,
+      "name": "IoDismountVolume",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 91,
+      "name": "IoDismountVolumeByName",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 92,
+      "name": "KeAlertResumeThread",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 93,
+      "name": "KeAlertThread",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 94,
+      "name": "KeBoostPriorityThread",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 95,
+      "name": "KeBugCheck",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 96,
+      "name": "KeBugCheckEx",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 20
+    },
+    {
+      "ordinal": 97,
+      "name": "KeCancelTimer",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 98,
+      "name": "KeConnectInterrupt",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 99,
+      "name": "KeDelayExecutionThread",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 100,
+      "name": "KeDisconnectInterrupt",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 101,
+      "name": "KeEnterCriticalRegion",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 0
+    },
+    {
+      "ordinal": 102,
+      "name": "MmGlobalData",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 103,
+      "name": "KeGetCurrentIrql",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 0
+    },
+    {
+      "ordinal": 104,
+      "name": "KeGetCurrentThread",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 0
+    },
+    {
+      "ordinal": 105,
+      "name": "KeInitializeApc",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 28
+    },
+    {
+      "ordinal": 106,
+      "name": "KeInitializeDeviceQueue",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 107,
+      "name": "KeInitializeDpc",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 108,
+      "name": "KeInitializeEvent",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 109,
+      "name": "KeInitializeInterrupt",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 28
+    },
+    {
+      "ordinal": 110,
+      "name": "KeInitializeMutant",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 111,
+      "name": "KeInitializeQueue",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 112,
+      "name": "KeInitializeSemaphore",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 113,
+      "name": "KeInitializeTimerEx",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 114,
+      "name": "KeInsertByKeyDeviceQueue",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 115,
+      "name": "KeInsertDeviceQueue",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 116,
+      "name": "KeInsertHeadQueue",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 117,
+      "name": "KeInsertQueue",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 118,
+      "name": "KeInsertQueueApc",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 16
+    },
+    {
+      "ordinal": 119,
+      "name": "KeInsertQueueDpc",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 120,
+      "name": "KeInterruptTime",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 121,
+      "name": "KeIsExecutingDpc",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 0
+    },
+    {
+      "ordinal": 122,
+      "name": "KeLeaveCriticalRegion",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 0
+    },
+    {
+      "ordinal": 123,
+      "name": "KePulseEvent",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 124,
+      "name": "KeQueryBasePriorityThread",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 125,
+      "name": "KeQueryInterruptTime",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 0
+    },
+    {
+      "ordinal": 126,
+      "name": "KeQueryPerformanceCounter",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 0
+    },
+    {
+      "ordinal": 127,
+      "name": "KeQueryPerformanceFrequency",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 0
+    },
+    {
+      "ordinal": 128,
+      "name": "KeQuerySystemTime",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 129,
+      "name": "KeRaiseIrqlToDpcLevel",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 0
+    },
+    {
+      "ordinal": 130,
+      "name": "KeRaiseIrqlToSynchLevel",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 0
+    },
+    {
+      "ordinal": 131,
+      "name": "KeReleaseMutant",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 16
+    },
+    {
+      "ordinal": 132,
+      "name": "KeReleaseSemaphore",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 16
+    },
+    {
+      "ordinal": 133,
+      "name": "KeRemoveByKeyDeviceQueue",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 134,
+      "name": "KeRemoveDeviceQueue",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 135,
+      "name": "KeRemoveEntryDeviceQueue",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 136,
+      "name": "KeRemoveQueue",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 137,
+      "name": "KeRemoveQueueDpc",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 138,
+      "name": "KeResetEvent",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 139,
+      "name": "KeRestoreFloatingPointState",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 140,
+      "name": "KeResumeThread",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 141,
+      "name": "KeRundownQueue",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 142,
+      "name": "KeSaveFloatingPointState",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 143,
+      "name": "KeSetBasePriorityThread",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 144,
+      "name": "KeSetDisableBoostThread",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 145,
+      "name": "KeSetEvent",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 146,
+      "name": "KeSetEventBoostPriority",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 147,
+      "name": "KeSetPriorityProcess",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 148,
+      "name": "KeSetPriorityThread",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 149,
+      "name": "KeSetTimer",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 16
+    },
+    {
+      "ordinal": 150,
+      "name": "KeSetTimerEx",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 20
+    },
+    {
+      "ordinal": 151,
+      "name": "KeStallExecutionProcessor",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 152,
+      "name": "KeSuspendThread",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 153,
+      "name": "KeSynchronizeExecution",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 154,
+      "name": "KeSystemTime",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 155,
+      "name": "KeTestAlertThread",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 156,
+      "name": "KeTickCount",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 157,
+      "name": "KeTimeIncrement",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 158,
+      "name": "KeWaitForMultipleObjects",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 32
+    },
+    {
+      "ordinal": 159,
+      "name": "KeWaitForSingleObject",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 20
+    },
+    {
+      "ordinal": 160,
+      "name": "KfRaiseIrql",
+      "kind": "function",
+      "convention": "fastcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 161,
+      "name": "KfLowerIrql",
+      "kind": "function",
+      "convention": "fastcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 162,
+      "name": "KiBugCheckData",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 163,
+      "name": "KiUnlockDispatcherDatabase",
+      "kind": "function",
+      "convention": "fastcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 164,
+      "name": "LaunchDataPage",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 165,
+      "name": "MmAllocateContiguousMemory",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 166,
+      "name": "MmAllocateContiguousMemoryEx",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 20
+    },
+    {
+      "ordinal": 167,
+      "name": "MmAllocateSystemMemory",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 168,
+      "name": "MmClaimGpuInstanceMemory",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 169,
+      "name": "MmCreateKernelStack",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 170,
+      "name": "MmDeleteKernelStack",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 171,
+      "name": "MmFreeContiguousMemory",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 172,
+      "name": "MmFreeSystemMemory",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 173,
+      "name": "MmGetPhysicalAddress",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 174,
+      "name": "MmIsAddressValid",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 175,
+      "name": "MmLockUnlockBufferPages",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 176,
+      "name": "MmLockUnlockPhysicalPage",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 177,
+      "name": "MmMapIoSpace",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 178,
+      "name": "MmPersistContiguousMemory",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 179,
+      "name": "MmQueryAddressProtect",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 180,
+      "name": "MmQueryAllocationSize",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 181,
+      "name": "MmQueryStatistics",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 182,
+      "name": "MmSetAddressProtect",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 183,
+      "name": "MmUnmapIoSpace",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 184,
+      "name": "NtAllocateVirtualMemory",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 20
+    },
+    {
+      "ordinal": 185,
+      "name": "NtCancelTimer",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 186,
+      "name": "NtClearEvent",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 187,
+      "name": "NtClose",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 188,
+      "name": "NtCreateDirectoryObject",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 189,
+      "name": "NtCreateEvent",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 16
+    },
+    {
+      "ordinal": 190,
+      "name": "NtCreateFile",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 36
+    },
+    {
+      "ordinal": 191,
+      "name": "NtCreateIoCompletion",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 16
+    },
+    {
+      "ordinal": 192,
+      "name": "NtCreateMutant",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 193,
+      "name": "NtCreateSemaphore",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 16
+    },
+    {
+      "ordinal": 194,
+      "name": "NtCreateTimer",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 195,
+      "name": "NtDeleteFile",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 196,
+      "name": "NtDeviceIoControlFile",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 40
+    },
+    {
+      "ordinal": 197,
+      "name": "NtDuplicateObject",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 198,
+      "name": "NtFlushBuffersFile",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 199,
+      "name": "NtFreeVirtualMemory",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 200,
+      "name": "NtFsControlFile",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 40
+    },
+    {
+      "ordinal": 201,
+      "name": "NtOpenDirectoryObject",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 202,
+      "name": "NtOpenFile",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 24
+    },
+    {
+      "ordinal": 203,
+      "name": "NtOpenSymbolicLinkObject",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 204,
+      "name": "NtProtectVirtualMemory",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 16
+    },
+    {
+      "ordinal": 205,
+      "name": "NtPulseEvent",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 206,
+      "name": "NtQueueApcThread",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 20
+    },
+    {
+      "ordinal": 207,
+      "name": "NtQueryDirectoryFile",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 40
+    },
+    {
+      "ordinal": 208,
+      "name": "NtQueryDirectoryObject",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 24
+    },
+    {
+      "ordinal": 209,
+      "name": "NtQueryEvent",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 210,
+      "name": "NtQueryFullAttributesFile",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 211,
+      "name": "NtQueryInformationFile",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 20
+    },
+    {
+      "ordinal": 212,
+      "name": "NtQueryIoCompletion",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 213,
+      "name": "NtQueryMutant",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 214,
+      "name": "NtQuerySemaphore",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 215,
+      "name": "NtQuerySymbolicLinkObject",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 216,
+      "name": "NtQueryTimer",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 217,
+      "name": "NtQueryVirtualMemory",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 218,
+      "name": "NtQueryVolumeInformationFile",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 20
+    },
+    {
+      "ordinal": 219,
+      "name": "NtReadFile",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 32
+    },
+    {
+      "ordinal": 220,
+      "name": "NtReadFileScatter",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 32
+    },
+    {
+      "ordinal": 221,
+      "name": "NtReleaseMutant",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 222,
+      "name": "NtReleaseSemaphore",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 223,
+      "name": "NtRemoveIoCompletion",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 20
+    },
+    {
+      "ordinal": 224,
+      "name": "NtResumeThread",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 225,
+      "name": "NtSetEvent",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 226,
+      "name": "NtSetInformationFile",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 20
+    },
+    {
+      "ordinal": 227,
+      "name": "NtSetIoCompletion",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 20
+    },
+    {
+      "ordinal": 228,
+      "name": "NtSetSystemTime",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 229,
+      "name": "NtSetTimerEx",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 32
+    },
+    {
+      "ordinal": 230,
+      "name": "NtSignalAndWaitForSingleObjectEx",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 20
+    },
+    {
+      "ordinal": 231,
+      "name": "NtSuspendThread",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 232,
+      "name": "NtUserIoApcDispatcher",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 233,
+      "name": "NtWaitForSingleObject",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 234,
+      "name": "NtWaitForSingleObjectEx",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 16
+    },
+    {
+      "ordinal": 235,
+      "name": "NtWaitForMultipleObjectsEx",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 24
+    },
+    {
+      "ordinal": 236,
+      "name": "NtWriteFile",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 32
+    },
+    {
+      "ordinal": 237,
+      "name": "NtWriteFileGather",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 32
+    },
+    {
+      "ordinal": 238,
+      "name": "NtYieldExecution",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 0
+    },
+    {
+      "ordinal": 239,
+      "name": "ObCreateObject",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 16
+    },
+    {
+      "ordinal": 240,
+      "name": "ObDirectoryObjectType",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 241,
+      "name": "ObInsertObject",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 16
+    },
+    {
+      "ordinal": 242,
+      "name": "ObMakeTemporaryObject",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 243,
+      "name": "ObOpenObjectByName",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 16
+    },
+    {
+      "ordinal": 244,
+      "name": "ObOpenObjectByPointer",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 245,
+      "name": "ObpObjectHandleTable",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 246,
+      "name": "ObReferenceObjectByHandle",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 247,
+      "name": "ObReferenceObjectByName",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 20
+    },
+    {
+      "ordinal": 248,
+      "name": "ObReferenceObjectByPointer",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 249,
+      "name": "ObSymbolicLinkObjectType",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 250,
+      "name": "ObfDereferenceObject",
+      "kind": "function",
+      "convention": "fastcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 251,
+      "name": "ObfReferenceObject",
+      "kind": "function",
+      "convention": "fastcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 252,
+      "name": "PhyGetLinkState",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 253,
+      "name": "PhyInitialize",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 254,
+      "name": "PsCreateSystemThread",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 20
+    },
+    {
+      "ordinal": 255,
+      "name": "PsCreateSystemThreadEx",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 40
+    },
+    {
+      "ordinal": 256,
+      "name": "PsQueryStatistics",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 257,
+      "name": "PsSetCreateThreadNotifyRoutine",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 258,
+      "name": "PsTerminateSystemThread",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 259,
+      "name": "PsThreadObjectType",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 260,
+      "name": "RtlAnsiStringToUnicodeString",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 261,
+      "name": "RtlAppendStringToString",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 262,
+      "name": "RtlAppendUnicodeStringToString",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 263,
+      "name": "RtlAppendUnicodeToString",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 264,
+      "name": "RtlAssert",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 16
+    },
+    {
+      "ordinal": 265,
+      "name": "RtlCaptureContext",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 266,
+      "name": "RtlCaptureStackBackTrace",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 16
+    },
+    {
+      "ordinal": 267,
+      "name": "RtlCharToInteger",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 268,
+      "name": "RtlCompareMemory",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 269,
+      "name": "RtlCompareMemoryUlong",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 270,
+      "name": "RtlCompareString",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 271,
+      "name": "RtlCompareUnicodeString",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 272,
+      "name": "RtlCopyString",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 273,
+      "name": "RtlCopyUnicodeString",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 274,
+      "name": "RtlCreateUnicodeString",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 275,
+      "name": "RtlDowncaseUnicodeChar",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 276,
+      "name": "RtlDowncaseUnicodeString",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 277,
+      "name": "RtlEnterCriticalSection",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 278,
+      "name": "RtlEnterCriticalSectionAndRegion",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 279,
+      "name": "RtlEqualString",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 280,
+      "name": "RtlEqualUnicodeString",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 281,
+      "name": "RtlExtendedIntegerMultiply",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 282,
+      "name": "RtlExtendedLargeIntegerDivide",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 16
+    },
+    {
+      "ordinal": 283,
+      "name": "RtlExtendedMagicDivide",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 20
+    },
+    {
+      "ordinal": 284,
+      "name": "RtlFillMemory",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 285,
+      "name": "RtlFillMemoryUlong",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 286,
+      "name": "RtlFreeAnsiString",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 287,
+      "name": "RtlFreeUnicodeString",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 288,
+      "name": "RtlGetCallersAddress",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 289,
+      "name": "RtlInitAnsiString",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 290,
+      "name": "RtlInitUnicodeString",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 291,
+      "name": "RtlInitializeCriticalSection",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 292,
+      "name": "RtlIntegerToChar",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 16
+    },
+    {
+      "ordinal": 293,
+      "name": "RtlIntegerToUnicodeString",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 294,
+      "name": "RtlLeaveCriticalSection",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 295,
+      "name": "RtlLeaveCriticalSectionAndRegion",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 296,
+      "name": "RtlLowerChar",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 297,
+      "name": "RtlMapGenericMask",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 298,
+      "name": "RtlMoveMemory",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 299,
+      "name": "RtlMultiByteToUnicodeN",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 20
+    },
+    {
+      "ordinal": 300,
+      "name": "RtlMultiByteToUnicodeSize",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 301,
+      "name": "RtlNtStatusToDosError",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 302,
+      "name": "RtlRaiseException",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 303,
+      "name": "RtlRaiseStatus",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 304,
+      "name": "RtlTimeFieldsToTime",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 305,
+      "name": "RtlTimeToTimeFields",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 306,
+      "name": "RtlTryEnterCriticalSection",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 307,
+      "name": "RtlUlongByteSwap",
+      "kind": "function",
+      "convention": "fastcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 308,
+      "name": "RtlUnicodeStringToAnsiString",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 309,
+      "name": "RtlUnicodeStringToInteger",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 310,
+      "name": "RtlUnicodeToMultiByteN",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 20
+    },
+    {
+      "ordinal": 311,
+      "name": "RtlUnicodeToMultiByteSize",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 312,
+      "name": "RtlUnwind",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 16
+    },
+    {
+      "ordinal": 313,
+      "name": "RtlUpcaseUnicodeChar",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 314,
+      "name": "RtlUpcaseUnicodeString",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 315,
+      "name": "RtlUpcaseUnicodeToMultiByteN",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 20
+    },
+    {
+      "ordinal": 316,
+      "name": "RtlUpperChar",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 317,
+      "name": "RtlUpperString",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 318,
+      "name": "RtlUshortByteSwap",
+      "kind": "function",
+      "convention": "fastcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 319,
+      "name": "RtlWalkFrameChain",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 320,
+      "name": "RtlZeroMemory",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 321,
+      "name": "XboxEEPROMKey",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 322,
+      "name": "XboxHardwareInfo",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 323,
+      "name": "XboxHDKey",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 324,
+      "name": "XboxKrnlVersion",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 325,
+      "name": "XboxSignatureKey",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 326,
+      "name": "XeImageFileName",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 327,
+      "name": "XeLoadSection",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 328,
+      "name": "XeUnloadSection",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 329,
+      "name": "READ_PORT_BUFFER_UCHAR",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 330,
+      "name": "READ_PORT_BUFFER_USHORT",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 331,
+      "name": "READ_PORT_BUFFER_ULONG",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 332,
+      "name": "WRITE_PORT_BUFFER_UCHAR",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 333,
+      "name": "WRITE_PORT_BUFFER_USHORT",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 334,
+      "name": "WRITE_PORT_BUFFER_ULONG",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 335,
+      "name": "XcSHAInit",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 336,
+      "name": "XcSHAUpdate",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 337,
+      "name": "XcSHAFinal",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 338,
+      "name": "XcRC4Key",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 339,
+      "name": "XcRC4Crypt",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 340,
+      "name": "XcHMAC",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 28
+    },
+    {
+      "ordinal": 341,
+      "name": "XcPKEncPublic",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 342,
+      "name": "XcPKDecPrivate",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 343,
+      "name": "XcPKGetKeyLen",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 344,
+      "name": "XcVerifyPKCS1Signature",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 345,
+      "name": "XcModExp",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 20
+    },
+    {
+      "ordinal": 346,
+      "name": "XcDESKeyParity",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 347,
+      "name": "XcKeyTable",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 348,
+      "name": "XcBlockCrypt",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 20
+    },
+    {
+      "ordinal": 349,
+      "name": "XcBlockCryptCBC",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 28
+    },
+    {
+      "ordinal": 350,
+      "name": "XcCryptService",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 351,
+      "name": "XcUpdateCrypto",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 352,
+      "name": "RtlRip",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 12
+    },
+    {
+      "ordinal": 353,
+      "name": "XboxLANKey",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 354,
+      "name": "XboxAlternateSignatureKeys",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 355,
+      "name": "XePublicKeyData",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 356,
+      "name": "HalBootSMCVideoMode",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 357,
+      "name": "IdexChannelObject",
+      "kind": "data",
+      "convention": null,
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 358,
+      "name": "HalIsResetOrShutdownPending",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 0
+    },
+    {
+      "ordinal": 359,
+      "name": "IoMarkIrpMustComplete",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 360,
+      "name": "HalInitiateShutdown",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 0
+    },
+    {
+      "ordinal": 361,
+      "name": "RtlSnprintf",
+      "kind": "function",
+      "convention": "cdecl",
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 362,
+      "name": "RtlSprintf",
+      "kind": "function",
+      "convention": "cdecl",
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 363,
+      "name": "RtlVsnprintf",
+      "kind": "function",
+      "convention": "cdecl",
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 364,
+      "name": "RtlVsprintf",
+      "kind": "function",
+      "convention": "cdecl",
+      "argumentBytes": null
+    },
+    {
+      "ordinal": 365,
+      "name": "HalEnableSecureTrayEject",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 0
+    },
+    {
+      "ordinal": 366,
+      "name": "HalWriteSMCScratchRegister",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 4
+    },
+    {
+      "ordinal": 374,
+      "name": "MmDbgAllocateMemory",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 375,
+      "name": "MmDbgFreeMemory",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 376,
+      "name": "MmDbgQueryAvailablePages",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 0
+    },
+    {
+      "ordinal": 377,
+      "name": "MmDbgReleaseAddress",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    },
+    {
+      "ordinal": 378,
+      "name": "MmDbgWriteCheck",
+      "kind": "function",
+      "convention": "stdcall",
+      "argumentBytes": 8
+    }
+  ]
+}

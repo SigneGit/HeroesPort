@@ -1,0 +1,11 @@
+{
+  "name": "Diagnostic retail Xbox compatibility profile",
+  "launchMedium": "imported-files",
+  "kernelVersion": [1, 0, 5838, 1],
+  "hardwareFlags": 1,
+  "gpuRevision": 162,
+  "mcpRevision": 211,
+  "memoryLimitBytes": 67108864,
+  "nonvolatileDwords": {"0": 0, "7": 1, "8": 0, "9": 0, "10": 0, "12": 0, "17": 0, "18": 1, "259": 256, "260": 1},
+  "note": "Synthetic HLE environment, not a dump of Xbox firmware. Graphics/audio/hardware interfaces are incomplete."
+}

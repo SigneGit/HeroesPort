@@ -1,0 +1,25 @@
+{
+  "name": "dd-heroes-pc",
+  "version": "0.1.0",
+  "private": true,
+  "description": "User-supplied Xbox disc import and analysis tools for a Dungeons & Dragons: Heroes PC recompilation research project",
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "release:check": "node tools/check-public-source.mjs",
+    "release:package": "node tools/package-release.mjs",
+    "release:verify": "node tools/check-release.mjs release",
+    "test": "node --test tests/formats.test.mjs tests/native-migration.test.mjs",
+    "inspect": "node tools/heroes.mjs inspect",
+    "import": "node tools/heroes.mjs import",
+    "native:deps": "node tools/setup-native-deps.mjs",
+    "native:tools": "node tools/build-native-tools.mjs",
+    "native:prepare": "node tools/prepare-native.mjs",
+    "native:recompile": "node tools/recompile-native.mjs",
+    "test:legacy": "node --test research/js-prototype/tests/runtime.test.mjs research/js-prototype/tests/port-runtime.test.mjs research/js-prototype/tests/startup.integration.test.mjs",
+    "legacy:startup": "node research/js-prototype/tools/advance-startup.mjs"
+  },
+  "dependencies": {
+    "iced-x86": "1.22.0"
+  }
+}

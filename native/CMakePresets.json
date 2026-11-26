@@ -1,0 +1,18 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "release",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/out/build/release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++",
+        "CMAKE_C_FLAGS": "-march=x86-64-v2",
+        "CMAKE_CXX_FLAGS": "-march=x86-64-v2"
+      }
+    }
+  ],
+  "buildPresets": [{"name": "release", "configurePreset": "release", "jobs": 4}]
+}

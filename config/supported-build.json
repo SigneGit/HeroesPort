@@ -1,0 +1,14 @@
+{
+  "name": "Dungeons & Dragons: Heroes (USA), supplied retail XBE",
+  "titleId": "0x49470013",
+  "xbeSha256": "f48303a89fa9e2043d301ee6444ae69602570a03f1dd3de386f88928b5478ece",
+  "extractedTreeSha256": "ff79cb3b01f443f92e998db6551f90c60583547724c8054bdedb403440d44dc2",
+  "entryPoint": "0x00055c61",
+  "analysisSeeds": ["0x00055bed", "0x000562eb"],
+  "analysisPointerTables": [
+    {"start": "0x002e6440", "end": "0x002e644c", "role": "XDK early initializer table"},
+    {"start": "0x002e6450", "end": "0x002e65d0", "role": "C++ initializer table"},
+    {"start": "0x002e65d4", "end": "0x002e65e8", "role": "CRT initializer table"}
+  ],
+  "note": "Executable fingerprint only. Other revisions must be analyzed before adding support."
+}

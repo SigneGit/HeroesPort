@@ -1,0 +1,76 @@
+# Generated from verified.json; facts apply only to the fingerprinted Heroes XBE.
+[layout]
+# XGetDevices 0x291A19 reads record+0.
+XPP_Current = 0x00000000
+# XGetDevices 0x291A19 clears record+4.
+XPP_Changed = 0x00000004
+# XGetDevices 0x291A19 writes record+8.
+XPP_Previous = 0x00000008
+# SetTexture 0x241F72 reads push pointer and 0x241F96 advances it.
+CDevice_Push = 0x00000000
+# SetTexture 0x241F75 compares push pointer with device+4.
+CDevice_PushThreshold = 0x00000004
+# SetIndices 0x2421B9/0x2421CB/0x2421DD store BaseVertexIndex here.
+CDevice_BaseVertex = 0x0000001c
+# SetIndices 0x24218A reads prior buffer; 0x2421B2 writes new buffer.
+CDevice_IndexBuffer = 0x00000388
+# GetViewportOffsetAndScale 0x243EA4/0x243EB4 scales viewport Z range and origin by device+0x530.
+CDevice_ZScale = 0x00000530
+# GetViewportOffsetAndScale 0x243DFE/0x243E63 multiplies viewport X/Width by this field.
+CDevice_SuperSampleX = 0x00000544
+# GetViewportOffsetAndScale 0x243E20/0x243E88 multiplies viewport Y/Height by this field.
+CDevice_SuperSampleY = 0x00000548
+# SetTransform 0x240F71 computes (type+0x21)*64, equivalent to device+0x840+type*64.
+CDevice_Transforms = 0x00000840
+# SetTexture 0x241F30/0x241F69 reads/writes device+0xB68+stage*4.
+CDevice_Textures = 0x00000b68
+# GetRenderTarget2 0x241896 returns device+0x15E4.
+CDevice_RenderTarget = 0x000015e4
+# GetDepthStencilSurface2 0x2418B6 returns device+0x15E8.
+CDevice_Depth = 0x000015e8
+# GetBackBuffer2 index 0 at 0x241538..0x241540 selects device+0x15F4.
+CDevice_BackBuffer = 0x000015f4
+# GetBackBuffer2 index -1 at 0x24151F..0x241525 selects device+0x15F8.
+CDevice_FrontBuffer = 0x000015f8
+# Swap increments this field at 0x24E790/0x24E7D0 and returns it at 0x24E80B.
+CDevice_SwapCount = 0x00002058
+# CreateDevice failure cleanup at 0x24E959..0x24E960 clears 0x820 dwords starting at device 0x251980.
+CDevice_Size = 0x00002080
+# SetViewport 0x241A80..0x241AAC stores the six viewport words at +0xAC0..+0xAD4.
+CDevice_Viewport = 0x00000ac0
+# SetPixelShader 0x24E9F8/0x24EA08 reads/writes shader handle.
+CDevice_PixelShader = 0x0000036c
+# CreateDevice 0x24E916/0x24E933 retains BehaviorFlags 0x10 at device+8; SetPixelShader 0x24EAD1 tests it.
+CDevice_Flags = 0x00000008
+# SetTexture 0x241FA7 ORs 0x4800 into dirty flags after clearing texture.
+DirtyFlags_Texture = 0x00004800
+# SetTextureStageStateNotInline 0x2447DB multiplies stage by 32 dwords, combined with type at 0x2447E0; table write 0x2447EC.
+TextureState_Stage = 0x00000020
+# SetStreamSource 0x2437CA/0x2437CD computes stream index * 3 * 4.
+Stream_Size = 0x0000000c
+# SetStreamSource 0x243812 writes stride argument to table base 0x253A00+stream*12.
+Stream_Stride = 0x00000000
+# SetStreamSource 0x243818 writes vertex buffer to table base+8.
+Stream_Buffer = 0x00000008
+# CreatePixelShader 0x24E9C4 stores definition at handle+8; SetPixelShader 0x24EA70 reads it.
+PixelShader_Definition = 0x00000008
+# SetScreenSpaceOffset 0x242613/0x242623 stores X/Y plus library bias at +0xAD8/+0xADC.
+CDevice_ScreenSpaceOffset = 0x00000ad8
+# Default-state initialization 0x2467D7 tests this surface pointer to set ZEnable (state 0x8F).
+CDevice_AutoDepth = 0x00001600
+# Effects descriptor builder 0x258D5E adds image+0x804 to the dword count from image+0x80C. Download path 0x256D01 -> 0x256215 -> 0x256082 -> 0x258FB2 copies that header field at 0x258FE0.
+EffectsImage_Skip0 = 0x00000804
+# Effects descriptor builder 0x258D58 loads image+0x80C before adding image+0x804; download copies this header word at 0x258FF2.
+EffectsImage_Skip1 = 0x0000080c
+# Effects descriptor builder 0x258D67 forms image+0x818+(Skip0+Skip1)*4; 0x258D6E reads effect count and 0x258D71 scales descriptor entries by 32. Heroes MpasFX.bin yields two effects within its 14028 bytes.
+EffectsImage_Desc = 0x00000818
+# CDevice initialization 0x246F87 locates miniport at +0x1808. Its vertical-blank handler 0x248934/0x248941 increments miniport+0x1C0, equivalent to device+0x19C8.
+CDevice_VBlankCount = 0x000019c8
+# BlockUntilVerticalBlank 0x2410D7 waits on device+0x199C. Miniport vertical-blank handler 0x2489D1 signals miniport+0x194, with miniport at device+0x1808.
+CDevice_VBlankEvent = 0x0000199c
+# Miniport vertical-blank handler 0x2489DE reads callback at miniport+0x190 and calls it at 0x248A05 with a pointer to three status dwords. Miniport starts at device+0x1808.
+CDevice_VBlankCallback = 0x00001998
+# Device initialization 0x247307 stores static FVF object pointer at +0x37C; SetVertexShader 0x243C3E stores the active decoded shader object here (the raw shader handle is separately at +0x380).
+CDevice_VertexShader = 0x0000037c
+# SetPalette 0x2420DD/0x2420EE reads old palette and 0x242115 writes new palette at device+0xB78+stage*4; initialization 0x24747F addresses this array.
+CDevice_Palettes = 0x00000b78

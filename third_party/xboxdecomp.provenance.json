@@ -1,0 +1,483 @@
+{
+  "schemaVersion": 1,
+  "origin": "User-supplied XboxDecomp source snapshot",
+  "license": "MIT; see xboxdecomp/LICENSE and THIRD_PARTY.txt",
+  "snapshotSha256": "ca9682d45c6bbcaf761b6268de71593c2b002dbe7a1bc972cd9516f6016cfc15",
+  "files": [
+    {
+      "path": "LICENSE",
+      "size": 1063,
+      "sha256": "b61d0b216ea6b3a6be922ef85f6348568069fb3c5fc816d021ee66ec43de8157"
+    },
+    {
+      "path": "README.md",
+      "size": 7986,
+      "sha256": "b4ec67766b74c2d5e4686afd78f379d697288508247d2152fd56041de8425099"
+    },
+    {
+      "path": "SDK_VERSION",
+      "size": 6,
+      "sha256": "e9dd8507f4bf0c6f42458e41aea833ad0bd3f6127272335eee9bf4d58541ed67"
+    },
+    {
+      "path": "THIRD_PARTY.txt",
+      "size": 3279,
+      "sha256": "568e1f2d724284edd7eb00c4b3e5d626c6c445feb8052e497306c06846eaec0b"
+    },
+    {
+      "path": "cmake/XbeRecomp.cmake",
+      "size": 9381,
+      "sha256": "43c70530e5727f5c79cde89a4e99684f303f668011ce9749b2c2771a64d83f1e"
+    },
+    {
+      "path": "runtime/app/app.h",
+      "size": 5254,
+      "sha256": "0512fce8f3c183d140cd825d435557ebab24aa14262d404dad7a0f8578461202"
+    },
+    {
+      "path": "runtime/app/game_code.cpp",
+      "size": 32695,
+      "sha256": "c80a0c909eb19dbde9313dab3aa52252b6033e7b5766890c2e814e93f1ef9e0e"
+    },
+    {
+      "path": "runtime/app/game_files.cpp",
+      "size": 4648,
+      "sha256": "a3a83f5ced5195965bc735153298d963829ed630e71d396549dfda37e1f9e226"
+    },
+    {
+      "path": "runtime/app/handover.cpp",
+      "size": 1151,
+      "sha256": "f9576fb47aae93db525d22bc8db86d4809063525b2d40ca4e12d6792887badfd"
+    },
+    {
+      "path": "runtime/app/main.cpp",
+      "size": 12030,
+      "sha256": "4ebf29ca4bcdc94a25ca246cd17e7efb4adcad16891ca7a229c181104fad56e0"
+    },
+    {
+      "path": "runtime/app/settings.cpp",
+      "size": 5126,
+      "sha256": "1f425420eaac0b9b7d0e4c510658a9ae0f599b62e1734b33dd90aa5a9ba9dcb5"
+    },
+    {
+      "path": "runtime/app/splash.cpp",
+      "size": 4929,
+      "sha256": "c752ae93362f78f831ef688a3a22a5bcd856142c7f98fb3a4cd84bd0b58292de"
+    },
+    {
+      "path": "runtime/app/system_info.cpp",
+      "size": 3518,
+      "sha256": "08a82aff0991d891727961c874d40aebba042ac39d6873a77344c73adf6874cd"
+    },
+    {
+      "path": "runtime/audio/audio.h",
+      "size": 965,
+      "sha256": "2c6596465c08cd9581812d4b2d84546c56185f1c4165a5858b69b974c80942c8"
+    },
+    {
+      "path": "runtime/audio/xaudio2.cpp",
+      "size": 9506,
+      "sha256": "c5bb310b3ff5dd506a9f92c93bd25d3a4252fc89f5f8e299965fe6e7a0dc68a1"
+    },
+    {
+      "path": "runtime/core/diag.h",
+      "size": 658,
+      "sha256": "cf73cbecd40ff1526194a055d9645fb9591812ce22dd86750cd692a1e97cdfcf"
+    },
+    {
+      "path": "runtime/core/input.cpp",
+      "size": 5499,
+      "sha256": "70b4745af412fa31247232a632fb18875e101c5860456f5404d8f1e2d44b8dc5"
+    },
+    {
+      "path": "runtime/core/input.h",
+      "size": 710,
+      "sha256": "9f5c88ad8d7e669bd331241a6a443bc4bca26dcea38056dcaa22f35374b04f71"
+    },
+    {
+      "path": "runtime/core/log.cpp",
+      "size": 2857,
+      "sha256": "f15b3b1e55d3cd8cde4cccafc5afbf876567b6406eef3821c316922dedad52e3"
+    },
+    {
+      "path": "runtime/core/log.h",
+      "size": 1325,
+      "sha256": "a62529044cd44f36a4c4233cbf125ad7a661090945ac3fc6994d7d0652574ca2"
+    },
+    {
+      "path": "runtime/cpu/dispatch.cpp",
+      "size": 10462,
+      "sha256": "da999e1411e07a9658b9079a73945907dd5aa69dc3bd39de129661fd134f0bfa"
+    },
+    {
+      "path": "runtime/cpu/freestanding/cmath",
+      "size": 1604,
+      "sha256": "55f3c144e9e95afab91a2be154c55090361361d8a9e71d9ba97ee940fafd6a41"
+    },
+    {
+      "path": "runtime/cpu/freestanding/cstdint",
+      "size": 559,
+      "sha256": "5f8cf67c86cde46ba35f07d3d1b964991105691ca5ccb5135a5d87d20b05df8a"
+    },
+    {
+      "path": "runtime/cpu/freestanding/cstring",
+      "size": 339,
+      "sha256": "61e062445e0701bc13e278d4da58cd4bc9137cc3f2e1059208ae06a2381b1ac8"
+    },
+    {
+      "path": "runtime/cpu/freestanding/limits",
+      "size": 244,
+      "sha256": "87c7fdd069220b9205c5163338a8295badf8e5b8c70f12e629d12c6eb65258d3"
+    },
+    {
+      "path": "runtime/cpu/freestanding/type_traits",
+      "size": 73,
+      "sha256": "abf055d96e6f6d0c9f36e23d0486d737780457439fd7a62d647e62813abbbfe3"
+    },
+    {
+      "path": "runtime/cpu/x86_context.h",
+      "size": 1294,
+      "sha256": "4c2281d9925a3d7714e52421c0376cbe33dd30dcd26926e1d3bd82ebe4a3b36b"
+    },
+    {
+      "path": "runtime/cpu/x86_ops.h",
+      "size": 9618,
+      "sha256": "4c5ff31518d98f64e880291ceade2b3d6762b9d761030a39022f2f785534db00"
+    },
+    {
+      "path": "runtime/gpu/backend.h",
+      "size": 3629,
+      "sha256": "8d798ce1b99aebcdcdaa8fe4c72b3fe4bb22c6e121f2c5b0ffd6b08d4a133e1f"
+    },
+    {
+      "path": "runtime/gpu/d3d12.cpp",
+      "size": 157972,
+      "sha256": "3ef6fba13ad8d8af54f6e4bfc763a57a4dca8c34515cc29b96bd7e2f79a84e7d"
+    },
+    {
+      "path": "runtime/gpu/ext.h",
+      "size": 5256,
+      "sha256": "b5e4930a05bca17c11e89273acecd98d21b1173adfb3072be56570414b7c7c83"
+    },
+    {
+      "path": "runtime/gpu/render_thread.cpp",
+      "size": 20097,
+      "sha256": "28d048288f1c38e9b7ceab3c4fdebcdd4d86a72d29e61db544378e57877d0e48"
+    },
+    {
+      "path": "runtime/gpu/shaders.cpp",
+      "size": 49861,
+      "sha256": "44161298d3eabc2332da1eae4837608a64ee2a281a266b70fd8fcbe572727532"
+    },
+    {
+      "path": "runtime/gpu/shaders.h",
+      "size": 5795,
+      "sha256": "e3b10be6ff084791abf6b189a81bc89145d60037feada132cd3692796524109d"
+    },
+    {
+      "path": "runtime/gpu/simple_dirty.h",
+      "size": 738,
+      "sha256": "3cbbc282acd073943476699f1a59259adffecd103bb8da07751af81a96257a7e"
+    },
+    {
+      "path": "runtime/gpu/state.h",
+      "size": 6521,
+      "sha256": "b32f7e79f7a05e9219bd580a4f9839a89d1fc9ed04b62d8ef44910149650633b"
+    },
+    {
+      "path": "runtime/gpu/texture.cpp",
+      "size": 22020,
+      "sha256": "ae1b2248d586b5710aff740436f56132c5b7e6fb4a7b3f72d320f16c286a60b1"
+    },
+    {
+      "path": "runtime/gpu/texture.h",
+      "size": 2269,
+      "sha256": "a7f192042bd350ebbc903aa9eb9b38e71cda156b89f8d2c65955c1acf9227d9e"
+    },
+    {
+      "path": "runtime/gpu/texturedumper.cpp",
+      "size": 22608,
+      "sha256": "01d3ef775dba2494fb97e69c97c00ce9ffbc72bbf18c69307e0c6dc9c04e8f5d"
+    },
+    {
+      "path": "runtime/gpu/texturedumper.h",
+      "size": 1817,
+      "sha256": "e66df33371352ed86a09ddbafef3f673da36741c55e64a78aba447e7f4f45c63"
+    },
+    {
+      "path": "runtime/gpu/vertex.cpp",
+      "size": 17427,
+      "sha256": "e5f674881a1d591d2e39cd82dbbb474d167db51121a4da834612c29b1e8737f5"
+    },
+    {
+      "path": "runtime/gpu/vertex.h",
+      "size": 2463,
+      "sha256": "adb765897f7deec52c53d9152ff8623e22bf54daf8d0c095f882227d11d4987b"
+    },
+    {
+      "path": "runtime/kernel/boot.cpp",
+      "size": 8431,
+      "sha256": "4971f5b5a59e78cf3718c06054202041d05a6bf351ef50b5d43f2734886ebf5b"
+    },
+    {
+      "path": "runtime/kernel/crypto.cpp",
+      "size": 3737,
+      "sha256": "9f9f8e93dc2032b5dfb18e5a54836504206885b94d899b25e0b8e4fc3606cebf"
+    },
+    {
+      "path": "runtime/kernel/crypto.h",
+      "size": 585,
+      "sha256": "bcac3446bf5c878b45a9284f2db36a06905f18b82d99d56670c1598a7b453a19"
+    },
+    {
+      "path": "runtime/kernel/disc.cpp",
+      "size": 6221,
+      "sha256": "bda14cd1054e7d76d5543e59d54d089a641cace4c3547a1f929e62e987d7a306"
+    },
+    {
+      "path": "runtime/kernel/disc.h",
+      "size": 1885,
+      "sha256": "b10161ac0cecddc4d51e6611d053d2b0325e40682150f9db7ea69e0ca7b4ce2c"
+    },
+    {
+      "path": "runtime/kernel/exports.h",
+      "size": 2123,
+      "sha256": "65b5ed05be418cca97d4bbedd03eb1248ef07832bb67cd99d01916ed15d29ecd"
+    },
+    {
+      "path": "runtime/kernel/files.cpp",
+      "size": 28643,
+      "sha256": "011174de060c6f3791b88c2b8daf101e182a8ef95b228446abd917fcb751ae0e"
+    },
+    {
+      "path": "runtime/kernel/kernel.h",
+      "size": 8963,
+      "sha256": "42675bce60285eb3a9d21f3117dc012980a3222c13556ada5f686857a24dd597"
+    },
+    {
+      "path": "runtime/kernel/memory.cpp",
+      "size": 14900,
+      "sha256": "2d999482136d4eda3ab91fd604eb3054da44e09111d9a0a4558dda335f1f0f3f"
+    },
+    {
+      "path": "runtime/kernel/memory.h",
+      "size": 2102,
+      "sha256": "88635d75ecca912b1ced9e062c30652b7f287e75310c60dfe3d41dedfd6e4f17"
+    },
+    {
+      "path": "runtime/kernel/objects.cpp",
+      "size": 13451,
+      "sha256": "a422086a51d15b150edce48c3bac8a31723107487ee65f58c89d7e77fc0f29c3"
+    },
+    {
+      "path": "runtime/kernel/ordinals.cpp",
+      "size": 9024,
+      "sha256": "a7ddbef0e89259b55522a8b6b2f7736bbc198dbc35acf699868a499773b38896"
+    },
+    {
+      "path": "runtime/kernel/rtl.cpp",
+      "size": 11374,
+      "sha256": "c70ce0dbbe28a0fdf9bf09f9e1b4ba19d7e00edd552be080ffcef02a7e69bf9c"
+    },
+    {
+      "path": "runtime/kernel/threads.cpp",
+      "size": 7615,
+      "sha256": "89f97325ba4664e20c0aaeee75362d2a97879b3800b067847325cfae50dd0dc7"
+    },
+    {
+      "path": "runtime/kernel/xboxkrnl.cpp",
+      "size": 46382,
+      "sha256": "e5d2867b3c090e42b02b996b33a211854057c33409ebe7788499b888f89e74d1"
+    },
+    {
+      "path": "runtime/xbe/xbe.h",
+      "size": 5083,
+      "sha256": "d42834d9ffb3460ef68e5d855bdb467193b4a3fb1a2a35962f67b920b8357034"
+    },
+    {
+      "path": "runtime/xdk/bink.cpp",
+      "size": 1797,
+      "sha256": "dadd949b6e892c1482f3ab84cab84820d52b0cb7cb7fbc0042a097cb788f4a01"
+    },
+    {
+      "path": "runtime/xdk/crt_math.cpp",
+      "size": 1647,
+      "sha256": "bd7f0cd4fd5e90867fc8b1866d228cf84366e2588cce6700ae2aeeccd7758335"
+    },
+    {
+      "path": "runtime/xdk/d3d8.cpp",
+      "size": 63357,
+      "sha256": "791cfc339570f3ec39632c95ea2e9eba846860b2471163e96a045bd47aa2bb4b"
+    },
+    {
+      "path": "runtime/xdk/d3d8.h",
+      "size": 144,
+      "sha256": "4313d7106c0ac1f0a6ed82a9f83d000fc671c0bbcfbc08e0c48369e37a6cadcb"
+    },
+    {
+      "path": "runtime/xdk/dsound.cpp",
+      "size": 59140,
+      "sha256": "db2e1aca1e5ac104d26404ada6608ebbca6d10cfd273be33984d7d74a01d3929"
+    },
+    {
+      "path": "runtime/xdk/dsp_image.cpp",
+      "size": 18809,
+      "sha256": "c1a21aa0660ec6c921ee758a663f940e6ee9ef5953f94f589af7df3626464c0c"
+    },
+    {
+      "path": "runtime/xdk/dsp_image.h",
+      "size": 884,
+      "sha256": "3b5c408bbca3ed22309e473fcf19d92eefaeb6fb5328657d4e85f6a14b6f4af9"
+    },
+    {
+      "path": "runtime/xdk/hle.h",
+      "size": 9827,
+      "sha256": "aa7d28a20a7351dd7bff0c4e35ec509bd61fc681a82dde1181eddbcce82bfce8"
+    },
+    {
+      "path": "runtime/xdk/layout.h",
+      "size": 5580,
+      "sha256": "114a6c93e916f0133a511bcd3b275d44aecda00cf0836c7aa8310d790c3d5abd"
+    },
+    {
+      "path": "runtime/xdk/xapi.cpp",
+      "size": 5400,
+      "sha256": "e1aa9aa1971abfbc06eaeab13111553d685171244f20e260b1f68c8eebb7a907"
+    },
+    {
+      "path": "runtime/xdk/xnet.cpp",
+      "size": 27745,
+      "sha256": "6d25d3acdd00885912fbdaf54f0c3ae616763fef89cb6a767836ad9fe3f56400"
+    },
+    {
+      "path": "templates/game/.gitattributes",
+      "size": 32,
+      "sha256": "02c4d9e006deb91568beb1433f0bca183721862a180af4d6159759f21ec27b0d"
+    },
+    {
+      "path": "templates/game/.gitignore",
+      "size": 260,
+      "sha256": "82004f3b4c6cfbf96626faf815459d336502e555486a6ef2d4e4b761344edb49"
+    },
+    {
+      "path": "templates/game/CMakeLists.txt",
+      "size": 1658,
+      "sha256": "425d531b59d8cb5bcf6613b64d21af3e82d996485d7fe10c632b506bebad89a4"
+    },
+    {
+      "path": "templates/game/CMakePresets.json",
+      "size": 1269,
+      "sha256": "8c0bbb72e4e90e3a3f30b4f31189261bfbf9cd7c6714623b2ea9b95e0a09b3af"
+    },
+    {
+      "path": "templates/game/README.md",
+      "size": 2214,
+      "sha256": "a4c37326a92a28b18091e1a7ee6ab98fe1f4f2ca8f2fe4d26af919544a74d762"
+    },
+    {
+      "path": "templates/game/build.bat",
+      "size": 4351,
+      "sha256": "a89ada9934847dd763181b9987264583fff1f66087a6b7e2518d8bb1ab9189c6"
+    },
+    {
+      "path": "templates/game/config/game.toml",
+      "size": 1690,
+      "sha256": "4db595fc8d87450003b6c98cec025f4e18b4bbfaadbd7220b40c0ad0bf1a2b40"
+    },
+    {
+      "path": "templates/game/release.bat",
+      "size": 1729,
+      "sha256": "e4673e1a1b72bc10e6612e52cdef5abff531af2dcc3ab73bbdac6fc4944cd3ab"
+    },
+    {
+      "path": "templates/game/src/common/game_info.cpp",
+      "size": 1591,
+      "sha256": "a18ef1e2ce0c3b4ef60b2ee1b550da42d07a78e22ddfb4b0f02481a85eb72d39"
+    },
+    {
+      "path": "templates/game/src/game/hooks.cpp",
+      "size": 269,
+      "sha256": "c625669c44b0086c021808c3de2b7227e05d57b8428d44956ba19fa5ac413414"
+    },
+    {
+      "path": "tools/LLVM-LICENSE.txt",
+      "size": 15141,
+      "sha256": "8d85c1057d742e597985c7d4e6320b015a9139385cff4cbae06ffc0ebe89afee"
+    },
+    {
+      "path": "tools/recomp/analysis.cpp",
+      "size": 29885,
+      "sha256": "a089978e40d9d4c26f00678905127d08657b72fb4d62dc16abf68f490850f7bd"
+    },
+    {
+      "path": "tools/recomp/analysis.h",
+      "size": 4549,
+      "sha256": "317c5d9dbe0a3d3ae4568624c7eb2435a4eab998026182b946ec4b444d5c960c"
+    },
+    {
+      "path": "tools/recomp/codegen.cpp",
+      "size": 17414,
+      "sha256": "21ea7071a4392fd673250a687d1a0fccfafda9677721e7f08418fca0e2920b35"
+    },
+    {
+      "path": "tools/recomp/codegen.h",
+      "size": 2799,
+      "sha256": "baaaa2720cac3e7526b50b6c4e53dcc3068be24917dde72aaf690564b80a1e69"
+    },
+    {
+      "path": "tools/recomp/codegen_emit.cpp",
+      "size": 16219,
+      "sha256": "ec89a2c53abe96f5dc71c667815f7132d588758b9f2854d4f3842dd96037b0e8"
+    },
+    {
+      "path": "tools/recomp/codegen_fp.cpp",
+      "size": 29192,
+      "sha256": "bca2ac694af9fc13d7987a981d0c0998d41b3f053cdabf8218f22f1840bf35ae"
+    },
+    {
+      "path": "tools/recomp/codegen_int.cpp",
+      "size": 33331,
+      "sha256": "9feb97b5610ff21b4e58ca6c471625d8bf19b885fc3038c88e5611cf9eefc0e4"
+    },
+    {
+      "path": "tools/recomp/main.cpp",
+      "size": 11942,
+      "sha256": "fb6cd4c33029dbf6b9f769d17f4f4ce43db24d0b07512d90e197d408c04a8f79"
+    },
+    {
+      "path": "tools/symbols/main.cpp",
+      "size": 61823,
+      "sha256": "c880320e4c8137918d829148aeba16bd15219c46d4078cd219c2f795625e06ec"
+    },
+    {
+      "path": "tools/symbols/xbe2pe.py",
+      "size": 3398,
+      "sha256": "ebd2f70151ef3dec67a3edc17ac9f3ef0b972d7464b199eea76d1c4a279acca8"
+    },
+    {
+      "path": "xdk/4831/layout.toml",
+      "size": 5203,
+      "sha256": "61ee35484e0d5be8db89f9ecd27767b0e85d932f63d10b402ff1c9ee8182727a"
+    },
+    {
+      "path": "xdk/4831/signatures.toml",
+      "size": 58120,
+      "sha256": "a5560db28df64fa342aa553e6f715c8381bbb38070c399aa739a1573a950bb3e"
+    },
+    {
+      "path": "xdk/5659/layout.toml",
+      "size": 4188,
+      "sha256": "1ab207122e27423104c9e6ee1d7f8e499aa9f43f5c12d8344e598599512f3fe8"
+    },
+    {
+      "path": "xdk/5849/layout.toml",
+      "size": 5356,
+      "sha256": "8a2b4f06b63dcca1ecd31832d0fd65c8d2ef8232bc208561088ba6c9c5084404"
+    },
+    {
+      "path": "xdk/5849/signatures.toml",
+      "size": 85814,
+      "sha256": "bf17c74a1e428828d3503fd648ba97d0d4ff52753c60c027c146bbfa1ba16d5b"
+    }
+  ]
+}

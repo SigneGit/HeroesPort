@@ -1,0 +1,188 @@
+--- a/runtime/gpu/d3d12.cpp
++++ b/runtime/gpu/d3d12.cpp
+@@ -2240,6 +2240,7 @@ void FillSurfaceConstants(const State& s, GuestExtent size, DrawConstants& c) {
+ }
+ 
+ void FillCombinerConstants(const State& s, DrawConstants& c) {
++    std::copy(s.current_diffuse.begin(), s.current_diffuse.end(), c.current_diffuse);
+     for (int i = 0; i < 8; i++) {
+         Color(SimpleState(s, kMPsConstant0 + i * 4), c.pc[i * 2]);
+         Color(SimpleState(s, kMPsConstant1 + i * 4), c.pc[i * 2 + 1]);
+@@ -2489,8 +2490,18 @@ void D3D12Backend::CaptureTextures(const State& s, const DrawTextures& stages) {
+         bool tg = targets_.count(SizedTargetKey(d.data, Format(d.format).depth, d.width, d.height));
+         fprintf(cap_, " | t%d %08X fmt %X %ux%u%s%s", i, d.data, d.format, d.width, d.height, tg ? " target" : "",
+                 res ? "" : " unbound");
++        const auto& t = s.tss[size_t(i)];
++        fprintf(cap_, " lod %u addr %u,%u,%u filter %u,%u,%u coords %X xform %X", d.levels,
++                t[kTssAddressU], t[kTssAddressV], t[kTssAddressW], t[kTssMinFilter], t[kTssMagFilter],
++                t[kTssMipFilter], t[kTssTexCoordIndex], t[kTssTextureTransformFlags]);
+         if (res && !tg && stages.info[i].kind == kTex2D && cap_seen_.insert(d.data).second) {
+             cap_tex_.push_back({res, stages.sv[i].Format, d.data, d.width, d.height});
++            char raw_name[32];
++            snprintf(raw_name, sizeof(raw_name), "tex_%08X.bin", d.data);
++            if (FILE* raw = _wfopen((cap_dir_ / raw_name).c_str(), L"wb")) {
++                fwrite(kernel::HostPtr(d.data), 1, TotalSize(d), raw);
++                fclose(raw);
++            }
+         }
+     }
+ }
+@@ -2501,6 +2512,29 @@ constexpr int kVsConstantBias = 96;
+ 
+ void D3D12Backend::CaptureInputs(const State& s, const Assembled& a, const DrawConstants& c) {
+     fprintf(cap_, "\n     verts");
++    // Most world geometry stays in native buffers, so the converted-only dump
++    // below otherwise prints no positions or UVs for the surfaces under review.
++    if (a.vertices.empty()) {
++        for (uint32_t v = 0; v < std::min<uint32_t>(4, a.vertex_count); v++) {
++            fprintf(cap_, "\n     raw%u", v);
++            for (int r : {0, 2, 9, 10, 11, 12}) {
++                if (!(a.regs & (1u << r))) continue;
++                const auto& e = a.elements[size_t(r)];
++                uint32_t n = e.format == DXGI_FORMAT_R32G32_FLOAT ? 2 :
++                             e.format == DXGI_FORMAT_R32G32B32_FLOAT ? 3 :
++                             e.format == DXGI_FORMAT_R32G32B32A32_FLOAT ? 4 : 0;
++                if (!n || e.buffer >= a.buffer_count) continue;
++                const auto& b = a.buffers[e.buffer];
++                size_t offset = size_t(v) * b.stride + e.offset;
++                if (!b.src || offset + n * sizeof(float) > b.bytes) continue;
++                float value[4]{};
++                std::memcpy(value, b.src + offset, n * sizeof(float));
++                fprintf(cap_, " v%d[%g,%g,%g,%g]", r, value[0], value[1], value[2], value[3]);
++            }
++        }
++        for (int row = 0; row < 4; row++)
++            fprintf(cap_, "\n     wvp%d %g %g %g %g", row, c.wvp[row*4], c.wvp[row*4+1], c.wvp[row*4+2], c.wvp[row*4+3]);
++    }
+     uint32_t n = 0;
+     for (int r = 0; r < 16; r++) n += (a.regs >> r) & 1;
+     for (size_t v = 0; v < std::min<size_t>(4, n ? a.vertices.size() / (n * 4) : 0); v++) {
+@@ -2534,7 +2568,9 @@ void D3D12Backend::CaptureDraw(const State& s, uint32_t prim, uint32_t count, co
+ 
+ // small draws: their inputs and constants; then ends the draw's line
+ void D3D12Backend::EndDrawCapture(const State& s, const Assembled& a, uint32_t count, const DrawConstants& c) {
+-    if (count <= kQuadVertices) CaptureInputs(s, a, c);
++    fprintf(cap_, " diffuse %.3f %.3f %.3f %.3f", c.current_diffuse[0], c.current_diffuse[1],
++            c.current_diffuse[2], c.current_diffuse[3]);
++    if (count <= 16) CaptureInputs(s, a, c);
+     fputc('\n', cap_);
+ }
+ 
+@@ -3329,6 +3365,9 @@ void LogPerf() {
+     if (el >= 1000.0) {
+         Perf& p = g_perf;
+         double n = double(perf_frames);
++        LOGI("perf: title pacing per frame: vblank %.2f ms (%.1f calls), cap %.2f ms",
++             g_perf_vblank_ns.exchange(0) / n / 1e6, g_perf_vblank_calls.exchange(0) / n,
++             g_perf_pace_ns.exchange(0) / n / 1e6);
+         double host = p.draw + p.clear + p.copy + p.present + p.sync;
+         LOGI("perf: %.1f fps %.2f ms/frame | host %.2f (draw %.2f: assemble %.2f bind %.2f [check %.2f, upload %.2f] "
+              "compile %.2f; clear %.2f copy %.2f sync %.2f present %.2f [swap %.2f wait %.2f]) other %.2f",
+--- a/runtime/xdk/d3d8.cpp
++++ b/runtime/xdk/d3d8.cpp
+@@ -18,6 +18,7 @@
+ 
+ #include "app/app.h"
+ #include "core/diag.h"
++#include "core/frame_clock.h"
+ #include "gpu/backend.h"
+ #include "gpu/shaders.h"
+ #include "gpu/simple_dirty.h"
+@@ -333,10 +334,8 @@ constexpr bool kVBlank = XDK_CDevice_VBlankCount != xdk::kUnknown && XDK_CDevice
+ void VerticalBlank(X86Context& ctx) {
+     using clock = std::chrono::steady_clock;
+     uint32_t info = mem::AllocSystem(12), shown = 0;
+-    auto next = clock::now();
+     for (;;) {
+-        next = std::max(next + std::chrono::microseconds(16667), clock::now());
+-        std::this_thread::sleep_until(next);
++        std::this_thread::sleep_until(frame_clock::NextTick(clock::now()));
+         uint32_t count = Dev(XDK_CDevice_VBlankCount) + 1, swaps = Dev(kDevSwapCount);
+         SetDev(XDK_CDevice_VBlankCount, count);
+         ObjectRef event = FromPointer(kDevice + XDK_CDevice_VBlankEvent);
+@@ -508,7 +507,13 @@ HLE_STDCALL(D3D_MakeRequestedSpace, 2) {
+ }
+ 
+ HLE_STDCALL(D3DDevice_BlockUntilVerticalBlank, 0) {
+-    std::this_thread::sleep_for(std::chrono::milliseconds(16));
++    auto start = std::chrono::steady_clock::now();
++    std::this_thread::sleep_until(frame_clock::NextTick(start));
++    if (diag::Perf()) {
++        gpu::g_perf_vblank_ns += std::chrono::duration_cast<std::chrono::nanoseconds>(
++            std::chrono::steady_clock::now() - start).count();
++        gpu::g_perf_vblank_calls++;
++    }
+     return 0;
+ }
+ // (status): D3DRASTER_STATUS {InVBlank, ScanLine} on a 60 Hz frame clock. The library reads the GPU's scanline,
+@@ -1365,6 +1370,9 @@ bool ApplyImmediate(uint32_t m, uint32_t v) {
+     } else {
+         return false;
+     }
++    // Current attributes survive outside Begin/End and supply disabled vertex
++    // arrays. Heroes uses a constant diffuse for the number and shadow passes.
++    if (a == g_im_attr + 3 * 4) std::copy_n(a, 4, g_state.current_diffuse.begin());
+     if (!g_im_prim) return true;
+     g_im_mask |= 1u << (a - g_im_attr) / 4;
+     if (a == g_im_attr && last) g_im_vertices.insert(g_im_vertices.end(), g_im_attr, g_im_attr + 64);
+@@ -1411,7 +1419,9 @@ void Walk(uint32_t end) {
+             uint32_t m = head & 0x40000000 ? method : method + i * 4;
+             uint32_t v = R32(p);
+             ApplyVisibilityMethod(m, v);
+-            if (!ApplyConstant(m, v)) ApplyImmediate(m, v);
++            if (!ApplyConstant(m, v) && !ApplyImmediate(m, v) && !diag::CaptureDir().empty() &&
++                m >= 0x1B00 && m < 0x1C00 && (m & 0x3F) <= 4)
++                LOG_FIRST(32, "d3d: unhandled inline texture method %04X value %08X at push %08X", m, v, p);
+         }
+     }
+     g_walk = end;
+--- a/runtime/gpu/state.h
++++ b/runtime/gpu/state.h
+@@ -185,6 +185,9 @@ struct State {
+     uint32_t light_enable = 0;                         // bit per light
+     float ss_offset_x = 0, ss_offset_y = 0;
+     float zscale = 16777215.0f;  // depth buffer units per 1.0
++    // Vertex attribute 3 when no diffuse array is enabled. SetVertexData writes
++    // it independently of Begin/End, and array draws also consume that value.
++    std::array<float, 4> current_diffuse{1, 1, 1, 1};
+ };
+ 
+ }  // namespace gpu
+--- a/runtime/gpu/shaders.h
++++ b/runtime/gpu/shaders.h
+@@ -105,6 +105,7 @@ struct DrawConstants {
+     float lt[8][7][4];   // per light: diffuse, specular, ambient, position range, direction falloff, attenuation, cos theta/2 phi/2
+     float rtshift[4];    // per kTexTarget stage: host pixels its reads move along x and y, negative up and left
+     float zparams[4];    // ReversedDepthHlsl: a w buffer's scale (0 for a z buffer), its far w, the polygon offset
++    float current_diffuse[4];  // current vertex attribute 3 when it is absent from the input array
+ };
+ 
+ }  // namespace gpu
+--- a/runtime/gpu/shaders.cpp
++++ b/runtime/gpu/shaders.cpp
+@@ -55,6 +55,7 @@ const char* kCommonTail = R"(    float4 spread[4];
+     float4 lt[56];
+     float4 rtshift;
+     float4 zparams;
++    float4 current_diffuse;
+ };
+ )";
+ 
+@@ -133,7 +134,7 @@ std::string Src(const Tok& k, int which, uint16_t regs) {
+         base = reg == 12 ? "oPos" : F("R%u", reg);
+     } else if (mux == 2) {
+         uint32_t v = k.f(1, 9, 4);
+-        base = (regs >> v) & 1 ? F("i.v%u", v) : (v == 3 ? "float4(1,1,1,1)" : "float4(0,0,0,1)");
++        base = (regs >> v) & 1 ? F("i.v%u", v) : (v == 3 ? "current_diffuse" : "float4(0,0,0,1)");
+     } else {
+         uint32_t cr = k.f(1, 13, 8);
+         base = k.f(3, 1, 1) ? F("c[clamp(a0 + %u, 0, 191)]", cr) : F("c[%u]", cr);
+@@ -882,7 +883,7 @@ std::string FixedVertexHlsl(uint16_t regs, bool pretransformed, uint64_t decode,
+         s += "    oD0 = float4(me.rgb + ma.rgb * (amb.rgb + la) + md.rgb * ld, md.a);\n";
+         s += (f.light & 2) ? "    oD1 = float4(ms.rgb * ls, ms.a);\n" : "    oD1 = float4(0,0,0,0);\n";
+     } else {
+-        s += "    oD0 = " + v(3, "float4(1,1,1,1)") + ";\n";
++        s += "    oD0 = " + v(3, "current_diffuse") + ";\n";
+         s += "    oD1 = " + v(4, "float4(0,0,0,0)") + ";\n";
+     }
+     s += "    oB0 = oD0;\n    oB1 = oD1;\n";

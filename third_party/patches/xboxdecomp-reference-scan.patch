@@ -1,0 +1,76 @@
+diff --git a/tools/symbols/main.cpp b/tools/symbols/main.cpp
+index b626f75..452cacd 100644
+--- a/tools/symbols/main.cpp
++++ b/tools/symbols/main.cpp
+@@ -1352,14 +1352,25 @@ std::string AbiTable(const std::map<std::string, std::string>& abi) {
+ }
+ 
+ int Scan(const fs::path& xbe_path, const fs::path& xdk, const fs::path& out, const std::string& name,
+-         const std::string& library) {
++         const std::string& library, uint16_t reference_build = 0, const fs::path& evidence = {}) {
+     Image img;
+     if (!img.Load(xbe_path)) return 1;
+     auto& x = img.x;
+     PrintLibraries(xbe_path, x);
+ 
+     uint16_t build = 0;
+-    fs::path dir = SignatureDir(x, xdk, build);
++    fs::path dir;
++    if (reference_build) {
++        dir = xdk / std::to_string(reference_build);
++        if (!fs::exists(dir / "signatures.toml")) {
++            std::fprintf(stderr, "reference signature build %u does not exist\n", reference_build);
++            return 1;
++        }
++        auto wanted = WantedBuilds(x);
++        if (wanted.empty()) return 1;
++        build = wanted.front();
++        std::fprintf(stderr, "RESEARCH CANDIDATES: reference signatures %u against actual XDK %u; layouts are NOT assumed compatible\n", reference_build, build);
++    } else dir = SignatureDir(x, xdk, build);
+     if (dir.empty()) return 1;
+     SigFile sf;
+     if (!LoadSigs(dir / "signatures.toml", sf)) return 1;
+@@ -1383,6 +1394,18 @@ int Scan(const fs::path& xbe_path, const fs::path& xdk, const fs::path& out, con
+ 
+     std::map<std::string, uint32_t> data = ResolveData(img, sf, found, loose, report);
+     PrintScan(x, symbols, data, report);
++    if (!evidence.empty()) {
++        std::ofstream proof(evidence, std::ios::binary);
++        proof << "actual_build = " << build << "\nreference_build = " << (reference_build ? reference_build : build) << "\n\n[symbols]\n";
++        for (auto& [key, va] : symbols) {
++            const char* method = !va ? "unresolved" : found.count(key) ? "masked-bytes" : loose.count(key) ? "heuristic-or-export" : "export";
++            proof << key << " = { address = " << Hex(va) << ", method = \"" << method << "\" }\n";
++        }
++        proof << "\n[data]\n";
++        for (auto& [key, va] : data)
++            proof << key << " = { address = " << Hex(va) << ", method = \"" << (va ? "reference-or-export" : "unresolved") << "\" }\n";
++        if (!proof) return 1;
++    }
+ 
+     std::string s = XbeTable(xbe_path, x, build, name, Partitions(img), sections);
+     s += "library = \"" + library + "\"  # <exe>.dll, which the executable delay loads\n";
+@@ -1412,6 +1435,17 @@ int main(int argc, char** argv) {
+     std::string name = opt("--name");
+     std::string library = opt("--library");
+     std::string skip = opt("--skip");
++    std::string reference = opt("--signature-build");
++    std::string evidence = opt("--evidence");
++    uint16_t reference_build = 0;
++    if (!reference.empty()) {
++        try {
++            size_t end = 0;
++            unsigned long value = std::stoul(reference, &end);
++            if (!value || value > 65535 || end != reference.size()) return 1;
++            reference_build = uint16_t(value);
++        } catch (...) { return 1; }
++    }
+     if (!a.empty() && a[0] == "--sign" && a.size() >= 2 && !out.empty()) {
+         std::set<std::string> sk;
+         for (size_t p = 0; !skip.empty() && p != std::string::npos;) {
+@@ -1427,5 +1461,5 @@ int main(int argc, char** argv) {
+                      "       xbe_symbols --sign <config.toml>... --out signatures.toml [--skip name,...]\n");
+         return 1;
+     }
+-    return Scan(a[0], a[1], out, name.empty() ? "game" : name, library);
++    return Scan(a[0], a[1], out, name.empty() ? "game" : name, library, reference_build, evidence);
+ }

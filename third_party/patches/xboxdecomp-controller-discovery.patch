@@ -1,0 +1,14 @@
+--- a/runtime/xdk/xapi.cpp
++++ b/runtime/xdk/xapi.cpp
+@@ -59,7 +59,10 @@ HLE_STDCALL(XInitDevices, 2) {
+         W32(kMemoryUnitType + XDK_XPP_Changed, 0);
+         W32(kMemoryUnitType + XDK_XPP_Previous, 0);
+     }
+-    UpdatePorts();
++    // Device discovery completes asynchronously. Publishing connected pads
++    // here lets an immediate XGetDevices consume the initial insertion before
++    // titles finish constructing their input objects. The poller below will
++    // publish the first connection through the normal change notification.
+     if (!g_poller) {
+         g_poller = true;
+         std::thread([] {
