@@ -69,6 +69,17 @@ test('rejects truncated disc extents', () => {
   const data = fixtureIso(); data.writeUInt32LE(9999, 0x11004);
   withImage(data, image => assert.throws(() => image.files(), /extent/));
 });
+
+test('accepts an allocated erased table as an empty XISO directory', () => {
+  const data=fixtureIso('empty');
+  data[0x1100c]=0x10;
+  data.writeUInt32LE(2048,0x11008);
+  data.fill(0xff,0x12000,0x12800);
+  withImage(data,image=>assert.deepEqual(image.files(),[]));
+  // An erased child pointer in a nonempty table must still be rejected.
+  data[0x12000]=0;
+  withImage(data,image=>assert.throws(()=>image.files()));
+});
 for (const name of ['../escape', 'a\\b', 'file:stream', 'NUL.txt', 'bad.', 'bad ', '..']) {
   test(`rejects unsafe disc path ${JSON.stringify(name)}`, () => {
     withImage(fixtureIso(name), image => assert.throws(() => image.files(), /Unsafe/));

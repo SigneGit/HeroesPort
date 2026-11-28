@@ -56,7 +56,8 @@ test('the native build excludes the archived JS runtime and uses the SDK',()=>{
   assert.match(cmake,/third_party\/xboxdecomp\/cmake\/XbeRecomp.cmake/);assert.match(cmake,/add_xbe_image\(Heroes/);
   assert.ok(!cmake.includes('js-prototype'));assert.ok(existsSync(join(root,'research/js-prototype/runtime/cpu.mjs')));
 });
-const recompiler=join(root,'local/native-tools/xbe_recomp.exe');
+const localRecompiler=join(root,'local/native-tools/xbe_recomp.exe');
+const recompiler=existsSync(localRecompiler)?localRecompiler:join(root,'native/out/build/release/compiler/xbe_recomp.exe');
 test('compiled SDK recompiler emits native C++ for a synthetic XBE and rejects a wrong title', {skip:!existsSync(recompiler)},()=>{
   const directory=mkdtempSync(join(tmpdir(),'heroes-native-test-'));
   try{
@@ -70,6 +71,19 @@ test('compiled SDK recompiler emits native C++ for a synthetic XBE and rejects a
     let run=spawnSync(recompiler,[config,xbe,out],{encoding:'utf8'});assert.equal(run.status,0,run.stdout+run.stderr);
     const units=readdirSync(out).filter(name=>/^x86_recomp\.\d+\.cpp$/.test(name));assert.equal(units.length,2);
     assert.ok(units.some(file=>readFileSync(join(out,file),'utf8').includes('__imp__sub_00011000')));
+    // Use the production profiles' binding mode: the shared host must replace
+    // this API by name even when the next image moves it to another address.
+    for(const region of ['usa','pal']) {
+      const production=readFileSync(join(root,`native/config/heroes-${region}.toml`),'utf8');
+      const binding=production.match(/^named\s*=\s*(true|false)\s*$/m)?.[0]??'named = false';
+      writeFileSync(config,settings+'title = 0x12345678\n'+binding+'\n[symbols]\nXMountUtilityDrive = 0x11000\n');
+      const namedOut=join(directory,region);
+      run=spawnSync(recompiler,[config,xbe,namedOut],{encoding:'utf8'});
+      assert.equal(run.status,0,run.stdout+run.stderr);
+      assert.match(readFileSync(join(namedOut,'image_symbols.h'),'utf8'),/#define IMAGE_NAMED 1/);
+      assert.match(readFileSync(join(namedOut,'imports.def'),'utf8'),/__imp__sub_XMountUtilityDrive/);
+      assert.match(readFileSync(join(namedOut,'exports.def'),'utf8'),/X86Symbols DATA/);
+    }
     writeFileSync(config,settings+'title = 0xabcdef01\n');run=spawnSync(recompiler,[config,xbe,join(directory,'wrong')],{encoding:'utf8'});
     assert.notEqual(run.status,0);assert.ok(!existsSync(join(directory,'wrong')));
   }finally{rmSync(directory,{recursive:true,force:true});}

@@ -1,0 +1,135 @@
+# PAL addresses matched against the fingerprinted European executables.
+[[hook]]
+at = 0x0003cb10
+call = "HeroesMainMenuFrame"
+
+[[hook]]
+at = 0x001068f0
+call = "HeroesMainMenuHidden"
+
+[[hook]]
+at = 0x0003d6d0
+call = "HeroesScreenOpened"
+
+[[hook]]
+at = 0x000c4827
+call = "HeroesBootMovie"
+on_true = "0x000c498e"
+
+# Heroes' graphics setup writes the literal 0x28C7FF to GPU MMIO 0xFD400880
+# immediately after Direct3D_CreateDevice, outside the XDK wrapper.
+# The PC renderer owns GPU setup. Skip only this ten-byte hardware write;
+# resume at the next instruction, preserving game state and CPU flags.
+# Its effect on final rendering still requires visual comparison.
+[[hook]]
+at = 0x0007e19d
+call = "HeroesHostGraphicsSetup"
+on_true = "0x0007e1a7"
+
+# sub_65000: after acquiring source/backbuffer and destination level-0 surface,
+# before locking them. The LIN_A8R8G8B8 branch only calls CopyRects; no CPU reads.
+# Host issues that copy directly, then resumes the original two Release calls.
+[[hook]]
+at = 0x00065079
+call = "HeroesHostScreenCopy"
+on_true = "0x00065172"
+
+# Gameplay present wrapper: apply resource cheats on the title thread.
+[[hook]]
+at = 0x00069420
+call = "HeroesCheatFrame"
+
+# Opt-in animation cadence experiment. Full mode bypasses only the optional
+# alternate-frame return; native time, root motion and event processing remain.
+[[hook]]
+at = 0x00069420
+call = "HeroesAnimationFrame"
+
+[[hook]]
+at = 0x000b1080
+call = "HeroesAnimationModelEntry"
+
+[[hook]]
+at = 0x000b125e
+call = "HeroesAnimationAlternateGate"
+on_true = "0x000b12a1"
+
+[[hook]]
+at = 0x000b1285
+call = "HeroesAnimationSkipped"
+
+[[hook]]
+at = 0x000b12ac
+call = "HeroesAnimationStep"
+
+[[hook]]
+at = 0x00099900
+call = "HeroesAnimationAdvanceCall"
+
+[[hook]]
+at = 0x00099920
+call = "HeroesAnimationAdvance"
+
+[[hook]]
+at = 0x00099ca0
+call = "HeroesAnimationSample"
+
+# Original player-unbreakable damage branch zeroes the incoming damage.
+[[hook]]
+at = 0x000b9233
+call = "HeroesGodModeDamage"
+on_true = "0x000b923d"
+
+# Original invulnerability predicate returns true through this branch.
+[[hook]]
+at = 0x000c5730
+call = "HeroesGodModeQuery"
+on_true = "0x000c575b"
+
+# Restore borrowed attributes before the native character snapshot is built.
+[[hook]]
+at = 0x000d4b90
+call = "HeroesCheatBeforeSave"
+
+# Runtime actor copies also see the real source values.
+[[hook]]
+at = 0x000c5a10
+call = "HeroesCheatBeforePlayerCopy"
+
+[[hook]]
+at = 0x000b3cd0
+call = "HeroesCheatRemovePlayer"
+
+# Drop stale overlays when a player object is constructed at a reused address.
+[[hook]]
+at = 0x000d0c60
+call = "HeroesCheatNewPlayer"
+
+# Quest-state copies must not retain temporary gem flags.
+[[hook]]
+at = 0x00107560
+call = "HeroesCheatBeforeQuestCopy"
+
+# Preserve legitimate quest pickups while the borrowed flag is already visible.
+[[hook]]
+at = 0x00107a7e
+call = "HeroesCheatQuestWrite"
+
+[[hook]]
+at = 0x000cf3e0
+call = "HeroesCheatFreezeXP"
+on_true = "ret"
+
+# Alter the pending HP result, preserving the native x87 pop and death logic.
+[[hook]]
+at = 0x000d8196
+call = "HeroesCheatDamageReduction"
+
+# A positive hit from a hero/owned attack against a monster, before HP subtract.
+[[hook]]
+at = 0x000f6ff6
+call = "HeroesCheatOneHit"
+
+[[hook]]
+at = 0x001bfe31
+call = "HeroesCheatMonsterHit"

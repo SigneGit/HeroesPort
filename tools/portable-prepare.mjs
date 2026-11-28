@@ -1,25 +1,28 @@
-import {existsSync,readFileSync,writeFileSync,mkdirSync,rmSync,openSync,closeSync,renameSync} from 'node:fs';
+import {existsSync,readFileSync,writeFileSync,mkdirSync,rmSync,openSync,closeSync,renameSync,statSync} from 'node:fs';
 import {join,dirname,resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {spawn} from 'node:child_process';
 import {availableParallelism,freemem} from 'node:os';
-import {importAssets,validateAssets,hashFile} from './portable-assets.mjs';
+import {importAssets,validateAssets,hashFile,manifestName} from './portable-assets.mjs';
+import {selectBuild} from './supported-builds.mjs';
+import {createHash} from 'node:crypto';
 
 const releaseRoot=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 export async function preparePortable({directory=releaseRoot,iso,run=runTool,progress=()=>{}}={}) {
   const ready=join(directory,'heroes-ready.json');rmSync(ready,{force:true});
-  const profile=JSON.parse(readFileSync(join(directory,'config/supported-build.json'),'utf8'));
+  const config=JSON.parse(readFileSync(join(directory,'config/supported-build.json'),'utf8'));
   const assets=join(directory,'assets'),compiler=join(directory,'compiler'),work=join(compiler,'work/Heroes');
   for(const file of ['Heroes.exe','compiler/clang.exe','compiler/lld-link.exe','compiler/xbe_recomp.exe','compiler/Heroes.lib'])
     if(!existsSync(join(directory,file)))throw Error(`Missing release file: ${file}. Extract the complete release again.`);
   console.log('Verifying and extracting your game into this release folder...');
   progress(0,'Verifying game files');
-  const count=iso?importAssets(iso,assets,profile):validateAssets(assets,profile);
+  const count=iso?importAssets(iso,assets,config):validateAssets(assets,config);
+  const profile=selectBuild(config,JSON.parse(readFileSync(join(assets,manifestName),'utf8')).executableSha256);
   console.log(`Verified ${count} game files. Preparing the game locally; no downloads or installed build tools are needed.`);
   mkdirSync(work,{recursive:true});mkdirSync(join(directory,'logs'),{recursive:true});
   const log=join(directory,'logs/prepare.log');writeFileSync(log,'');
   progress(0.15,'Translating the Xbox executable');
-  await run(join(compiler,'xbe_recomp.exe'),[join(compiler,'config/heroes.toml'),join(assets,'default.xbe'),work,'--xdk',join(compiler,'xdk')],work,log);
+  await run(join(compiler,'xbe_recomp.exe'),[join(compiler,'config',profile.nativeConfig??'heroes.toml'),join(assets,'default.xbe'),work,'--xdk',join(compiler,'xdk')],work,log);
   const units=['x86_func_mapping',...Array.from({length:64},(_,i)=>`x86_recomp.${i}`)];
   let next=0,finished=0,failure;
   const slots=Math.max(1,Math.min(4,availableParallelism(),Math.floor(freemem()/(512*1024*1024))));
@@ -38,10 +41,13 @@ export async function preparePortable({directory=releaseRoot,iso,run=runTool,pro
   console.log('Linking the game...');
   progress(0.96,'Linking the game');
   await run(join(compiler,'lld-link.exe'),['/dll','/noentry','/nodefaultlib','/machine:x64','/opt:noicf','/def:exports.def','/implib:code.lib',`/out:${join(directory,'Heroes.dll')}`,join(compiler,'Heroes.lib'),...units.map(u=>u+'.obj')],work,log);
-  // The SDK accepts a matching un-stamped DLL newer than its host. Remove any
-  // old SDK stamp so copying/moving this portable folder cannot retain one.
-  rmSync(join(work,'built.txt'),{force:true});
   if(!existsSync(join(directory,'Heroes.dll')))throw Error('The compiler did not produce Heroes.dll.');
+  // Match the SDK's host-size / Windows FILETIME / executable SHA-1 stamp.
+  // This binds every regional DLL to both its host and its imported executable.
+  const host=statSync(join(directory,'Heroes.exe'),{bigint:true});
+  const fileTime=host.mtimeNs/100n+116444736000000000n;
+  const xbeSha1=createHash('sha1').update(readFileSync(join(assets,'default.xbe'))).digest('hex');
+  writeFileSync(join(work,'built.txt'),host.size+' '+fileTime+' '+xbeSha1+'\n');
   writeFileSync(ready,JSON.stringify({schemaVersion:2,importedFiles:count,xbeSha256:profile.xbeSha256,hostSha256:hashFile(join(directory,'Heroes.exe')),codeSha256:hashFile(join(directory,'Heroes.dll'))})+'\n');
   console.log('Ready to play. Assets, generated code, logs, settings and saves stay inside this release folder.');
   progress(1,'Ready to play');

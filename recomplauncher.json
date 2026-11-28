@@ -6,7 +6,7 @@
     {
       "id": "game",
       "role": "game",
-      "label": "Your USA Xbox ISO (XISO) or complete extracted game folder.",
+      "label": "Your Heroes Xbox ISO (USA, Europe, France, Italy or Spain) or complete extracted game folder.",
       "formats": [
         {
           "type": "file",
@@ -24,7 +24,11 @@
         "xdvdfs": "default.xbe"
       },
       "dumps": [
-        { "name": "USA (full disc)", "size": 7825162240, "crc32": "4140e4e7" }
+        { "name": "USA (full disc)", "size": 7825162240, "crc32": "4140e4e7" },
+        { "name": "Europe (full disc)", "size": 7825162240, "crc32": "87166e7d" },
+        { "name": "France (full disc)", "size": 7825162240, "crc32": "7170bf11" },
+        { "name": "Italy (full disc)", "size": 7825162240, "crc32": "18eff127" },
+        { "name": "Spain (full disc)", "size": 7825162240, "crc32": "7e19c66f" }
       ]
     }
   ],

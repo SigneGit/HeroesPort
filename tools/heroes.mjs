@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import { Image } from './xdvdfs.mjs';
 import { inspectXbe, hex } from './xbe.mjs';
+import {selectBuild} from './supported-builds.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const [command, filename, ...extra] = process.argv.slice(2);
@@ -42,9 +43,7 @@ try {
     else {
       const profilePath = join(root, 'config', 'supported-build.json');
       if (!existsSync(profilePath)) throw new Error('No supported executable profile configured');
-      const profile = JSON.parse(readFileSync(profilePath, 'utf8'));
-      if (report.sha256 !== profile.xbeSha256 || report.titleId !== profile.titleId)
-        throw new Error(`Unsupported executable build: ${report.titleId} / ${report.sha256}. Inspect it first; do not bypass the fingerprint check.`);
+      const profile = selectBuild(JSON.parse(readFileSync(profilePath, 'utf8')),report.sha256,report.titleId);
       // A fresh private staging directory prevents overwrite and symlink traversal.
       const local = join(root, 'local'), destination = join(local, 'game');
       mkdirSync(local, { recursive: true });

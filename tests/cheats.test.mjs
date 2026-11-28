@@ -24,7 +24,9 @@ test('actual cheat hooks restore borrowed stats before saves/copies and restrict
     const executable=join(directory,'hooks.exe');
     const build=spawnSync(compiler,['-std=c++20','-O2','-static','-I',join(root,'native/src'),'-I',join(root,'third_party/xboxdecomp/runtime'),join(root,'tests/native/cheats_runtime.cpp'),'-o',executable],{encoding:'utf8',env:{...process.env,PATH:dirname(compiler)+';'+process.env.PATH}});
     assert.equal(build.status,0,build.stdout+build.stderr);
-    const run=spawnSync(executable,[],{encoding:'utf8'});
-    assert.equal(run.status,0,run.stdout+run.stderr);
+    for(const args of [[],['pal']]) {
+      const run=spawnSync(executable,args,{encoding:'utf8'});
+      assert.equal(run.status,0,run.stdout+run.stderr);
+    }
   } finally {rmSync(directory,{recursive:true,force:true});}
 });

@@ -2,7 +2,9 @@
 
 <a href="https://recomplauncher.com"><picture><source media="(prefers-color-scheme: dark)" srcset="https://recomplauncher.com/assets/press/launcher/badge-light.svg"><img alt="Get it on RecompLauncher" src="https://recomplauncher.com/assets/press/launcher/badge-dark.svg" height="48"></picture></a>
 
-**How to play on Windows.** Add the extracted portable release through RecompLauncher's **Settings → Developers → Add a build**. In Easy Setup, select your USA Xbox ISO or the complete extracted folder containing `default.xbe`. Once setup finishes, press **Play**. For standalone play, open `HeroesLauncher.exe` and select your ISO.
+**Latest release: [v0.3.0 — regional game support](https://github.com/SigneGit/HeroesPort/releases/tag/v0.3.0).** Supports USA, Europe, France, Italy, and Spain.
+
+**How to play on Windows.** Add the extracted portable release through RecompLauncher's **Settings → Developers → Add a build**. In Easy Setup, select your supported Xbox ISO or the complete extracted folder containing `default.xbe`. Once setup finishes, press **Play**. For standalone play, open `HeroesLauncher.exe` and select your ISO.
 
 A work-in-progress native Windows PC port of the original Xbox version of **Dungeons & Dragons: Heroes**, built with the vendored **XboxDecomp / Xbox-XBERecomp** framework.
 
@@ -22,7 +24,7 @@ This is still an experimental port. Full save/load behavior, co-op, physical con
 
 - Windows x64 and a CPU supporting the build's `x86-64-v2` instruction target.
 - A DirectX 12 capable graphics system.
-- Your own supported USA Xbox ISO (see [Supported game image](#supported-game-image)).
+- Your own supported Xbox ISO (see [Supported game image](#supported-game-image)).
 - A writable folder with space for the package, approximately 2.7 GB of extracted game files, generated code, compiler cache, and saves. Allow additional space for initial preparation.
 - A keyboard or compatible gamepad. Keyboard input is confirmed; physical controller and co-op testing remain incomplete.
 
@@ -60,23 +62,30 @@ The helper downloads and verifies Microsoft's installer, uses `C:\BuildTools\Her
 
 ## Supported game image
 
-Only the configured **USA retail executable** is supported. The importer checks the title ID and executable SHA-256, rather than accepting any image with the same game name.
+The supplied **USA, Europe, France, Italy, and Spain retail images** are supported. The importer checks the title ID and executable SHA-256, rather than accepting any image with the same game name.
 
 | Field | Expected value |
 | --- | --- |
 | Title ID | `0x49470013` |
 | `default.xbe` SHA-256 | `f48303a89fa9e2043d301ee6444ae69602570a03f1dd3de386f88928b5478ece` |
+| USA full-disc size and CRC32 | 7,825,162,240 bytes, `4140E4E7` |
 
-The profile is recorded in [`config/supported-build.json`](config/supported-build.json). Other regions or revisions need separate analysis. Do not bypass the fingerprint check.
+RecompLauncher uses the [Redump disc fingerprints for all five supported regions](https://github.com/libretro/libretro-database/blob/master/metadat/redump/Microsoft%20-%20Xbox.dat) for its verified-copy badge. A trimmed XISO can have a different disc checksum and still contain every correct game file. During portable setup, Heroes checks the paths, sizes, and SHA-256 hashes of the game files against the selected region’s inventory before compiling. This check also applies to extracted folders and previously imported files used for a rebuild.
+
+The executable and complete-file fingerprints for all five versions are recorded in [`config/supported-build.json`](config/supported-build.json). The table above describes the USA version. Setup automatically selects the matching regional profile; each version retains its own assets. Unknown revisions and mixed or modified inventories are rejected.
+
+PAL executables use a separate native profile, relocated game hooks, and region-aware host calls. All five supplied images passed extraction, inventory verification, and native compilation. All four PAL versions also passed main-menu startup checks. User testing has found no additional regional problems, and the updated clean build has been confirmed working through RecompLauncher Easy Setup and Play. This does not establish full-game or co-op coverage. See [regional build notes](docs/REGIONAL-BUILDS.md).
+
+The v0.3.0 package includes the PAL startup fix, all five regional RecompLauncher disc fingerprints, and retries for temporary Windows extraction-folder locks. A fresh download contains no game assets, generated gameplay DLL, saves, or prior setup state. Setup detects the region automatically; use a separate extracted release folder for each version you want to keep installed.
 
 ## Play a portable release
 
 1. Extract the **entire** release folder to a writable location.
 2. Run `HeroesLauncher.exe`.
-3. Select your supported USA Xbox ISO and click **Prepare game**.
+3. Select your supported Xbox ISO and click **Prepare game**.
 4. Wait for extraction, verification, and local compilation to finish, then click **Play**.
 
-Initial preparation can take several minutes. The launcher enables Play only after preparation succeeds. Once imported, the ISO does not need to remain connected.
+Initial preparation can take several minutes. The launcher enables Play only after preparation succeeds. Temporary Windows file locks during the final extraction rename are retried automatically. Once imported, the ISO does not need to remain connected.
 
 Keep the folder together. Extracted files live in `assets/`, generated gameplay code in `Heroes.dll`, saves in `hdd/`, settings in `heroes-settings.toml`, and logs in `logs/`. Close the game and launcher before moving the folder. If preparation fails, check `logs/prepare.log` and retry; existing imports and saves are retained.
 
@@ -222,7 +231,7 @@ Run these separately and close the interactive game before starting another inst
 
 | Problem | What to check |
 | --- | --- |
-| Unsupported executable | Confirm your own ISO matches the configured USA build; inspect it with `tools/heroes.mjs inspect`. |
+| Unsupported executable | Confirm your own ISO matches a configured USA, Europe, France, Italy, or Spain build; inspect it with `tools/heroes.mjs inspect`. |
 | Missing MSVC, Clang, CMake, or Ninja | Install the C++ workload and LLVM/CMake components listed above. The wrapper discovers Visual Studio through `vswhere.exe`. |
 | MinGW compiler not found | Install MinGW-w64 or set `HEROES_CXX`; ensure `gcc.exe` is alongside `g++.exe`. |
 | Dependency download fails | Check network access and rerun `tools/setup-native-deps.mjs`; existing pinned downloads are reused. |

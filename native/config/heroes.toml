@@ -3,6 +3,7 @@
 includes = ["heroes-5455-layout.toml", "heroes-hooks.toml"]
 
 [xbe]
+named = true
 path = "assets/default.xbe"
 title = 0x49470013
 entry = 0x00055c61

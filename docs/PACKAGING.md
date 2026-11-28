@@ -14,16 +14,16 @@ destination. The version comes from `package.json`. The archive contains the
 verified package with `recomplauncher.json` beside `Heroes.exe`. Attach that
 archive to the corresponding versioned release with a summary of the changes.
 
-Easy Setup invokes `Heroes.exe --prepare "--game=<path>"`. For an extracted
-folder, the importer compares its inventory to the supported USA import.
+Easy Setup invokes `Heroes.exe --prepare "--game=<path>"`. For both a disc
+image and an extracted folder, the importer compares the game files with the selected supported region’s inventory.
 The fingerprint in `config/supported-build.json` hashes the UTF-8 JSON array
 of [lowercase relative path with forward slashes, byte size, SHA-256] entries
 sorted by path. A later `Heroes.exe --prepare` reuses the installed assets.
 Play runs the same executable with no arguments.
 
-The launcher's full-disc size and CRC32 come from the [USA entry in Redump's
-Xbox datafile](https://data.spludlow.co.uk/redump/redump/Microsoft%20-%20Xbox/Dungeons%20%26%20Dragons%20-%20Heroes%20%28USA%29).
-Trimmed XISOs still use the importer's executable fingerprint check.
+The launcher's full-disc sizes and CRC32 values cover USA, Europe, France, Italy,
+and Spain, from [Redump's Xbox datafile](https://github.com/libretro/libretro-database/blob/master/metadat/redump/Microsoft%20-%20Xbox.dat).
+Trimmed XISOs pass preparation when their game files match their region’s inventory.
 
 The package contains HeroesLauncher.exe, the host Heroes.exe, the Node runtime,
 the verified XDVDFS extractor, Clang, LLD, the native recompiler, host export
@@ -56,3 +56,7 @@ The package does not copy an ISO, imported files, generated gameplay C++,
 Heroes.dll, saves, settings, compiler work, a source checkout or developer logs.
 The importer never alters the supplied ISO. Windows x64 and a DirectX 12 capable
 system remain runtime requirements.
+
+Preparation chooses a regional compiler profile from the verified executable hash.
+The SDK cache stamp binds the resulting DLL to the host file size, Windows
+last-write FILETIME, and imported XBE SHA-1, preventing reuse across versions.

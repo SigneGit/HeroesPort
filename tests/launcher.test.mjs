@@ -40,7 +40,7 @@ test('failed preparation clears old readiness and retains imported data',()=>{
 });
 test('launcher rejects an imported executable even when its manifest claims compatibility',()=>{
   const d=mkdtempSync(join(tmpdir(),'heroes-launch-import-'));
-  try{mkdirSync(join(d,'assets'));writeFileSync(join(d,'assets/default.xbe'),'wrong game');writeFileSync(join(d,'manifest.json'),JSON.stringify({executableSha256:'f48303a89fa9e2043d301ee6444ae69602570a03f1dd3de386f88928b5478ece',files:[]}));assert.throws(()=>validateLauncherImport(d),/does not match/);}finally{rmSync(d,{recursive:true,force:true});}
+  try{mkdirSync(join(d,'assets'));writeFileSync(join(d,'assets/default.xbe'),'wrong game');writeFileSync(join(d,'manifest.json'),JSON.stringify({executableSha256:'f48303a89fa9e2043d301ee6444ae69602570a03f1dd3de386f88928b5478ece',files:[]}));assert.throws(()=>validateLauncherImport(d),/Unsupported executable/);}finally{rmSync(d,{recursive:true,force:true});}
 });
 test('launcher recognizes the user verified import',{skip:process.env.HEROES_TEST_GAME!=='1'},()=>assert.equal(validateLauncherImport(),480));
 const compiler=process.env.HEROES_CXX??'C:/msys64/mingw64/bin/g++.exe';

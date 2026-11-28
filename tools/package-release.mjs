@@ -45,7 +45,7 @@ try {
     for(const name of ['Heroes.exe','HeroesLauncher.exe','compiler/clang.exe','compiler/lld-link.exe','compiler/xbe_recomp.exe','compiler/Heroes.lib','compiler/LLVM-LICENSE.txt'])copy(join(build,name),name);
     for(const name of ['compiler/config','compiler/include','compiler/xdk'])tree(join(build,name),name);
     copy(process.execPath,'runtime/node.exe');
-    for(const name of ['portable-prepare.mjs','portable-assets.mjs','xdvdfs.mjs','xbe.mjs'])copy(join(root,'tools',name),`tools/${name}`);
+    for(const name of ['portable-prepare.mjs','portable-assets.mjs','supported-builds.mjs','xdvdfs.mjs','xbe.mjs'])copy(join(root,'tools',name),`tools/${name}`);
     copy(join(root,'config/supported-build.json'),'config/supported-build.json');
     for(const name of ['msvcp140.dll','vcruntime140.dll','vcruntime140_1.dll']) {
       copy(join(crtDirectory,name),name);copy(join(crtDirectory,name),`compiler/${name}`);

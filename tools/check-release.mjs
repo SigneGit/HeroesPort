@@ -8,8 +8,13 @@ export function checkRelease(directory) {
   const manifest=JSON.parse(readFileSync(join(directory,'release-files.json'),'utf8'));
   const expected=new Map(manifest.files.map(f=>[f.path,f.sha256]));
   if(!expected.has('recomplauncher.json'))throw Error('Incomplete release: recomplauncher.json');
-  for(const required of ['HeroesLauncher.exe','Heroes.exe','runtime/node.exe','tools/portable-prepare.mjs','tools/portable-assets.mjs','config/supported-build.json','compiler/clang.exe','compiler/lld-link.exe','compiler/xbe_recomp.exe','compiler/Heroes.lib','compiler/config/heroes.toml','licenses/Node-LICENSE.txt'])
+  for(const required of ['HeroesLauncher.exe','Heroes.exe','runtime/node.exe','tools/portable-prepare.mjs','tools/portable-assets.mjs','tools/supported-builds.mjs','config/supported-build.json','compiler/clang.exe','compiler/lld-link.exe','compiler/xbe_recomp.exe','compiler/Heroes.lib','compiler/config/heroes.toml','licenses/Node-LICENSE.txt'])
     if(!expected.has(required))throw Error(`Incomplete release: ${required}`);
+  const profile=JSON.parse(readFileSync(join(directory,'config/supported-build.json'),'utf8'));
+  for(const build of [profile,...profile.variants??[]]) {
+    if(build.nativeConfig&&!expected.has('compiler/config/'+build.nativeConfig))
+      throw Error('Incomplete regional compiler configuration: '+build.nativeConfig);
+  }
   const found=new Set();
   function walk(path) {
     for(const entry of readdirSync(path,{withFileTypes:true})) {

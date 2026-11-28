@@ -7,13 +7,13 @@ namespace { std::vector<uint8_t> guest(8*1024*1024); constexpr uint32_t hero=0x5
 namespace kernel {
 uint8_t* g_base=guest.data();
 uint32_t CallGuest(X86Context& ctx,uint32_t fn,const uint32_t* args,size_t) {
-    if(fn==0x15000)return 0x12340000u|uint32_t(ctx.ecx==enemy);
-    if(fn==0xc5290){
+    if(fn==heroes::GuestAddress(0x15000))return 0x12340000u|uint32_t(ctx.ecx==enemy);
+    if(fn==heroes::GuestAddress(0xc5290)){
         for(uint32_t i=0;i<ReadField(ctx.ecx+0x2472,1);++i)
             if(kernel::R32(ctx.ecx+0x19c4+i*20)==args[0])return i;
         return UINT32_MAX;
     }
-    if(fn==0xd60d0){
+    if(fn==heroes::GuestAddress(0xd60d0)){
         const auto count=ReadField(ctx.ecx+0x2472,1);
         kernel::W32(ctx.ecx+0x19c4+count*20,args[0]);
         kernel::W32(ctx.ecx+0x19c8+count*20,args[1]);
@@ -28,9 +28,10 @@ uint32_t AllocSystem(uint32_t,uint32_t){return 0x710000;}
 }
 namespace logx { void Write(Level,const char*,...){} }
 
-int main() {
+int main(int argc, char**) {
+    heroes::pal_image = argc > 1;
     auto put=[](uint32_t at,float v){std::memcpy(kernel::HostPtr(at),&v,4);};
-    kernel::W32(kPlayersRoot,0x500000);kernel::W32(0x500014,0x600000);
+    kernel::W32(PlayersRoot(),0x500000);kernel::W32(0x500014,0x600000);
     kernel::W32(0x600000+kPlayers,hero);kernel::W32(0x624680,0x650000);
     put(hero+0x74,90);put(hero+0x24ac,100);put(hero+0x24b0,10);put(hero+0x24b4,50);
     kernel::W32(hero+0x3b8+115*16,7);
@@ -94,7 +95,7 @@ int main() {
     ctx.st[3]=100;HeroesCheatDamageReduction(ctx,nullptr);assert(ctx.st[3]==100); // healing intact
     heroes::freeze_xp=true;ctx.ecx=hero;assert(HeroesCheatFreezeXP(ctx,nullptr));
     ctx.ecx=enemy;assert(!HeroesCheatFreezeXP(ctx,nullptr));
-    heroes::one_hit_kill=true;kernel::W32(0x49d158,0x300000);
+    heroes::one_hit_kill=true;kernel::W32(heroes::GuestAddress(0x49d158),0x300000);
     ctx.esi=enemy;ctx.edi=0x560000;kernel::W32(ctx.esp+12,hero);
     put(enemy+0x74,50);put(ctx.edi+0x1c,5);
     HeroesCheatOneHit(ctx,nullptr);assert(ReadFloat(enemy+0x74)==5);

@@ -49,6 +49,9 @@ export class Image {
       if (dir.size === 0) continue;
       if (dir.size > 32 * 1024 * 1024) throw new Error('Directory table exceeds safety limit');
       const table = this.read(this.offset(dir.sector, dir.size), dir.size);
+      // XISO writers can retain an allocated, erased sector for an empty
+      // directory. It has no root entry; FF bytes are not a filename/extent.
+      if (table.every(byte => byte === 0xff)) continue;
       const pending = [0], visited = new Set();
       while (pending.length) {
         const at = pending.pop();

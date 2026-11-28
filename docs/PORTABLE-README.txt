@@ -1,14 +1,14 @@
-Dungeons & Dragons: Heroes - PC release
+Dungeons & Dragons: Heroes - PC release v0.3.0
 
 Extract the ENTIRE release folder to a writable location on a Windows x64 PC
 with DirectX 12 support. Run HeroesLauncher.exe.
 
 In RecompLauncher, enable Developer tools and add this folder as a local build.
-Easy Setup accepts the USA Xbox ISO or its complete extracted game folder.
+Easy Setup accepts a supported Xbox ISO or its complete extracted game folder.
 After preparation, Play starts Heroes.exe directly. The game's page includes
 display and controller settings and can back up the title's saves.
 
-Select your own legally obtained supported USA Xbox ISO and click Prepare game.
+Select your own legally obtained supported Xbox ISO and click Prepare game.
 The launcher verifies the image, extracts its files, and prepares the game's code
 using the tools included here. No Node.js installation, Visual Studio, MinGW,
 source checkout, internet connection or additional compiler download is needed.
@@ -38,3 +38,10 @@ Escape on the main menu asks whether to close; No is the default.
 The downloadable release contains no original game data or gameplay DLL.
 Do not redistribute this folder after importing your game: use a fresh package
 made by the project's package-release tool, which excludes private game files.
+
+Supported supplied retail versions: USA, Europe, France, Italy, and Spain.
+Setup automatically selects the version from its executable and full inventory.
+All four PAL versions passed main-menu startup checks. User testing found no
+additional regional problems and confirmed RecompLauncher Easy Setup and Play.
+Full-game, save/load and co-op coverage still need broader testing.
+Temporary Windows extraction-folder locks are retried automatically.

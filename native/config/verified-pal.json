@@ -1,0 +1,367 @@
+{
+  "data": {
+    "XPP_GamepadType": {
+      "address": 2689268,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: Gamepad setup pushes 0x2907B4 at 0x5EF5D before XInputOpen (0x291712). Class resolver 0x291ADF reads class pointer 0x2907EC's type field at +4, also 0x2907B4. XGetDevices 0x291A19 proves record offsets 0, 4, 8."
+    },
+    "D3D_pDevice": {
+      "address": 2431672,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: Direct3D_CreateDevice stores 0x251980 here at 0x24E923; SetTexture 0x241F25 and SetStreamSource 0x2437B0 read it as CDevice pointer."
+    },
+    "D3D_DirtyFlags": {
+      "address": 2430488,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: SetTexture at 0x241FA1..0x241FAD reads/ORs 0x4800/stores this dword; SetStreamSource at 0x24380C/0x243824 updates stream dirty state here."
+    },
+    "D3D_DeferredTextureState": {
+      "address": 2430496,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: SetTextureStageStateNotInline at 0x2447DB shifts stage by 5 dwords; 0x2447EC stores at table 0x2514E0+(stage*32+type)*4. BorderColor at 0x244773 writes state 29 and ColorKeyColor at 0x2447AF writes state 30 within the same table."
+    },
+    "D3D_RenderState": {
+      "address": 2431008,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: SetPixelShader at 0x24EAD8..0x24EAE4 copies 0x39 definition dwords to this base. Render-state indexed writes at 0x243D9D/0x243DC2 and default-state replay 0x242673 use this same table."
+    },
+    "D3D_IndexData": {
+      "address": 2430484,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: SetIndices stores buffer+4 here at 0x242179, or clears it at 0x242180."
+    },
+    "D3D_FvfShader": {
+      "address": 2440472,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: SetVertexShader FVF path selects this static object at 0x243BF7 and passes it to FVF decoder 0x242F40 at 0x243BFD. Device initialization 0x247307 stores its address at CDevice+0x37C."
+    }
+  },
+  "note": "Only reviewed metadata belongs here; candidate scanner matches are kept separately.",
+  "symbols": {
+    "Direct3D_CreateDevice": {
+      "address": 2419232,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: 0x24E906/0x24E90A read arguments 4/5; 0x24E916 masks BehaviorFlags by 0x10; 0x24E919 selects static CDevice 0x251980, 0x24E923 stores its global pointer, 0x24E939 calls CDevice initialization. Success writes the device to argument 6 at 0x24E97B; both paths return with ret 0x18 at 0x24E970/0x24E981."
+    },
+    "D3DDevice_SetTexture": {
+      "address": 2367584,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: 0x241F30 reads old stage texture, 0x241F69 writes argument 2 to device+0xB68+stage*4; manages resource references, emits NV097 texture commands and sets dirty mask 0x4800. Returns ret 8."
+    },
+    "D3DDevice_SetPixelShader": {
+      "address": 2419504,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: 0x24EA08 stores shader handle at device+0x36C, 0x24EA70 reads shader definition at handle+8; 0x24EADF copies definition into render-state globals, then emits pixel-shader GPU commands. Returns ret 4."
+    },
+    "D3DDevice_SetIndices": {
+      "address": 2368160,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: 0x242176 reads index-buffer data and 0x242179 publishes it at 0x2514D4; old/new buffer references at device+0x388 and BaseVertexIndex argument at device+0x1C; ret 8 on all exits."
+    },
+    "D3DDevice_SetTransform": {
+      "address": 2363552,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: 0x240F71 computes (type+0x21)*64 within the device; 0x240F79/0x240F80 copy sixteen matrix words from argument 2, then projection-type handling and dirty flags; ret 8."
+    },
+    "D3DDevice_GetBackBuffer2": {
+      "address": 2365008,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: 0x241514 special-cases index -1 to device+0x15F8; index 0 selects +0x15F4, nonzero selects +0x15FC; adds surface reference and returns pointer, ret 4."
+    },
+    "D3DDevice_GetRenderTarget2": {
+      "address": 2365904,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: Reads global device at 0x241890, returns resource at device+0x15E4 after optional AddRef call 0x242A10. Zero stack arguments."
+    },
+    "D3DDevice_GetDepthStencilSurface2": {
+      "address": 2365936,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: Reads device+0x15E8 at 0x2418B6, returns null or AddRef surface. Zero stack arguments."
+    },
+    "D3DDevice_SetViewport": {
+      "address": 2365968,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: Clamps viewport to target dimensions and supersampling; 0x241A80..0x241AAC store X/Y/Width/Height/MinZ/MaxZ to +0xAC0..+0xAD4, updates viewport matrix and push commands; ret 4."
+    },
+    "D3DDevice_Swap": {
+      "address": 2418800,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: Reads one flags argument at 0x24E751, defaults zero to 5; schedules framebuffer swapping helpers 0x24E3F0/0x24E5E0, increments device+0x2058 and returns that count at 0x24E80B, ret 4."
+    },
+    "D3DDevice_SetTextureStageStateNotInline": {
+      "address": 2377984,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: Three stack arguments: stage, type, value. 0x2447DB/0x2447E0 compute stage*32+type and 0x2447EC updates the deferred table; special types dispatch to known texture state setters; ret 0x0C."
+    },
+    "D3D_InitDefaultState": {
+      "address": 2386112,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: Loops ten identity matrices through SetTransform at 0x246796; iterates render-state defaults 0x39..0xA5 through SetRenderStateNotInline at 0x2467C6, sets four stages of 32 texture defaults at 0x2467FD, unbinds textures and sets screen-space offset. No stack arguments; ret at 0x246841."
+    },
+    "D3DDevice_SetScreenSpaceOffset": {
+      "address": 2369344,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: Reads two float arguments, adds library bias and stores X/Y at device+0xAD8/+0xADC at 0x242613/0x242623; recomputes viewport and shader constants, ret 8."
+    },
+    "D3DDevice_BlockUntilVerticalBlank": {
+      "address": 2363904,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: Loads global CDevice, clears signal state at device+0x19A0, then waits on event device+0x199C at 0x2410D7 through kernel wait thunk 0x298774. No stack arguments."
+    },
+    "D3D_BlockOnTime": {
+      "address": 2384592,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: 0x246197 reads GPU report pointer at device+0x30 and waits for fence timestamp from argument 1; argument 2 contains wait flags read at 0x2461E0; returns ret 8 at 0x24629E. Called by known resource wait 0x24652F."
+    },
+    "D3D_BlockOnResource": {
+      "address": 2385424,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: Resource argument at 0x2464D9; checks surface type and parent at resource+0x14, uses busy predicate 0x242990 and calls fence wait 0x246190 with resource timestamp and flags. Returns ret 4."
+    },
+    "D3DResource_IsBusy": {
+      "address": 2370256,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: Tests internal reference bits 0x780000; for surface type 0x50000 also checks parent texture reference bits at resource+0x14. Returns boolean eax and ret 4."
+    },
+    "D3DDevice_MakeSpace": {
+      "address": 2385296,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: Zero-argument push-buffer threshold handler; reads segment sizing global 0x253CF0, passes size and half-size to ring-buffer space allocator 0x2462D0 and returns pointer in eax. Called when known setters compare push pointer against threshold."
+    },
+    "D3DDevice_SetRenderState_MultiSampleAntiAlias": {
+      "address": 2380864,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: 0x24530E writes state at 0x251940 = render-state base 0x2516E0 + 152*4; emits NV097_SET_MULTISAMPLE_CONTROL method 0x1D7C and returns ret 4. Its original path dereferences the uninitialized hardware shader object."
+    },
+    "D3DDevice_SetRenderState_MultiSampleMode": {
+      "address": 2380768,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: 0x2452AA writes state 154 at render-state base+154*4 (0x251948), then refreshes framebuffer state for back-buffer targets; ret 4."
+    },
+    "D3DDevice_SetRenderState_MultiSampleRenderTargetMode": {
+      "address": 2380816,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: 0x2452DA writes state 155 at render-state base+155*4 (0x25194C), then refreshes framebuffer state for offscreen targets; ret 4."
+    },
+    "D3DDevice_SetVertexShader": {
+      "address": 2374896,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: Reads one shader/FVF argument at 0x243BB2; low handle bit distinguishes compiled shader from FVF. 0x243BFD decodes FVF into static object 0x253BD8; 0x243C3E/0x243C44 store object/handle and then emit vertex-program GPU commands. Returns ret 4."
+    },
+    "IDirectSoundBuffer_SetFormat": {
+      "address": 2456114,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: Two-argument interface wrapper: 0x2578F2 reads buffer interface, 0x2578F6 forwards WAVEFORMATEX pointer, subtracts interface offset 0x1C and calls 0x2578A4; ret 8. Call chain 0x2578D5 -> 0x2574E6 -> 0x257460 -> 0x2583C8 dispatches PCM (tag 1) or Xbox ADPCM (tag 0x69) format conversion. Original path cannot operate on SDK-owned buffer objects."
+    },
+    "IDirectSoundBuffer_SetNotificationPositions": {
+      "address": 2453378,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: Three-argument interface wrapper returns ret 0x0C. 0x256860 forwards count and eight-byte pair array to 0x256410, which copies and sorts pairs by byte offset at 0x2564A3..0x2564D9. Game call 0x4C394 registers offsets 0 and 0xC060 with event handles from audio-buffer records, matching half-buffer refill notifications. Original voice stores array/count at +0xD8/+0xDC; host mixer must own and signal them."
+    },
+    "IDirectSoundBuffer_SetMixBins": {
+      "address": 2454638,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: Two-argument interface wrapper at 0x25732E forwards DSMIXBINS pointer and adjusted buffer object to 0x2572A8; returns ret 8. Chain 0x2572D9 -> 0x257198 -> 0x256EA6 reads count/pair-pointer at +0/+4, writes bin IDs at voice+0x28 and their volumes at voice+0x30+bin*4; null chooses default routing. Must use host SetBins for SDK-owned buffers."
+    },
+    "IDirectSoundBuffer_SetMixBinVolumes": {
+      "address": 2453122,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: Two-argument buffer-interface wrapper returns ret 8, calls 0x256C95 at 0x256D56. Chain 0x256CC6 -> 0x2563E2 -> 0x2562AA reads DSMIXBINS count and pair pointer and updates only volume slots at voice+0x30+bin*4 (0x2562C2), preserving routing. Unlike SetMixBins it does not replace the bin-ID array."
+    },
+    "D3DDevice_DrawVertices": {
+      "address": 2414992,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: Three stack arguments: primitive at 0x24D876, start index at 0x24D892, vertex count at 0x24D862. Emits begin/end method 0x17FC and batched DRAW_ARRAYS 0x1810 with 256-vertex segments; ret 0x0C at 0x24D8E1."
+    },
+    "D3DDevice_DrawIndexedVertices": {
+      "address": 2415152,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: Reads BaseVertexIndex at device+0x1C, primitive/count/16-bit index pointer from arguments 1/2/3. Copies index pairs from argument 3 into non-incrementing index-elements method 0x1800 at 0x24D95A/0x24D9CB; ends primitive and ret 0x0C."
+    },
+    "D3DDevice_DrawVerticesUP": {
+      "address": 2414624,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: Four stack arguments primitive/count/vertex pointer/stride. 0x24D705..0x24D70B reads primitive and user pointer/stride; count at 0x24D731; copies vertex data into inline-array method 0x1818 at 0x24D79E, using input-declaration field widths; ret 0x10."
+    },
+    "D3DDevice_End": {
+      "address": 2416064,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: Zero-argument primitive end emits begin/end method 0x17FC with value zero at 0x24DC93/0x24DC99, advances push pointer and clears immediate-mode flags; ret at 0x24DCC0."
+    },
+    "D3DDevice_Clear": {
+      "address": 2393136,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: Six-argument target/depth clear: loads render target/depth at 0x2482FB/0x248303, flags/color/depth/stencil at adjusted esp+0x54/+0x58/+0x5C/+0x60, rectangle count/pointer at +0x4C/+0x50. Emits clear rectangle methods 0x1D98/0x1D9C at 0x248604 and returns ret 0x18 at 0x24868C."
+    },
+    "IDirectSoundBuffer_SetOutputBuffer": {
+      "address": 2454610,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: Two-argument buffer-interface wrapper at 0x257312 passes adjusted source and optional output-buffer interface to 0x25725A; ret 8 at 0x25732B. 0x25728B calls 0x257144, which converts the destination interface at 0x25714A, compares voice output pointer at +0xB0 (0x25715B), detaches old destination and installs new one via 0x256F71. SDK-owned buffers require the host implementation, which keeps their mix-bin routing."
+    },
+    "XInputGetCapabilities": {
+      "address": 2693300,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: Game controller initialization calls this at 0x5EF6C immediately after XInputOpen, passing the returned handle and capabilities record. Original routine at 0x29178F dereferences the USB handle internals, returns ERROR_DEVICE_NOT_CONNECTED (0x48F) at 0x29192A for a null device pointer, clears six dwords plus one byte of capabilities at 0x2917A8..0x2917AF, stores subtype at offset 0 and returns ret 8 at 0x291949. Must use the host query for SDK-owned keyboard/gamepad handles."
+    },
+    "D3DDevice_SetRenderTarget": {
+      "address": 2364368,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: 0x241295 reads RT argument; 0x2412E6 writes CDevice+0x15E4. 0x241309 reads depth argument and 0x24130F writes +0x15E8. Body continues across internal seed 0x241347 and returns ret 8 at 0x241501."
+    },
+    "D3DDevice_SetRenderState_ZEnable": {
+      "address": 2380000,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: 0x244FB3 reads one argument, emits NV097_SET_DEPTH_TEST_ENABLE 0x30C at 0x244FCE, writes render state 143 at 0x25191C at 0x244FF4, ret 4 at 0x24502C."
+    },
+    "D3DDevice_SetRenderState_StencilEnable": {
+      "address": 2380144,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: 0x245077 reads one argument, emits NV097_SET_STENCIL_TEST_ENABLE 0x32C at 0x24509B, writes render state 144 at 0x251920 at 0x2450AA, ret 4 at 0x2450B1."
+    },
+    "D3DDevice_SetRenderState_TextureFactor": {
+      "address": 2376528,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: 0x24422D reads factor; without pixel shader emits 16 combiner constants via nonincrementing method 0x400A60. Writes render state 148 at 0x251930 at 0x24424A/0x244258, ret 4 at 0x244251/0x24425E."
+    },
+    "D3DDevice_SetRenderState_PSTextureModes": {
+      "address": 2375264,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: 0x243D20 reads one argument, writes device shader texture modes +0x378 and dirty bit 0x4000; 0x243D3A writes render state 136 at 0x251900; ret 4 at 0x243D3F."
+    },
+    "D3DDevice_SetMaterial": {
+      "address": 2363840,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: 0x241081 reads one pointer; 0x24108C selects CDevice+0xAE0, 0x241092/0x241097 copy 17 dwords (D3DMATERIAL8), 0x24109F sets lighting dirty mask 0x9000, ret 4 at 0x2410AD. Title calls it at 0x20D1ED. Required to populate host material diffuse alpha for fixed-function equipment draws."
+    },
+    "D3DDevice_SetLight": {
+      "address": 2366528,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: 0x241B00 reads light index; grows 0x90-byte light records through CDevice+0x38C/+0x390; 0x241C82 reads second argument and 0x241C8E/0x241C95 copy 26 dwords. Type at record+0 distinguishes point/spot/directional and directional vector uses +0x40..+0x48. Both paths ret 8 at 0x241B50/0x241DB0. SDK wrapper retains original guest light-list management."
+    },
+    "D3DDevice_LightEnable": {
+      "address": 2367232,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: 0x241DC4 reads light index after 0x68-byte frame and push; 0x241E26 calls SetLight with a default 26-dword directional light when absent. 0x241E33 reads enable argument; +0x8C active slot and CDevice+0x394 active list/+0x3B4 type mask are set or cleared. Both paths ret 8 at 0x241EBB/0x241F0E. SDK wrapper preserves original guest list updates."
+    },
+    "D3DDevice_SetTextureState_TexCoordIndex": {
+      "address": 2377472,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: 0x2445C1 reads coordinate/generation selector, 0x2445CE reads stage; 0x2445D4 shifts stage by 7 bytes and 0x2445D7 writes at 0x251550 (deferred texture table 0x2514E0+28*4). 0x2445FB isolates generation bits 0xFFFF0000; low selector+9 chooses vertex input at 0x244657..0x24465E. Ret 8 at 0x2446C2. Title texture-transform setup calls it at 0xB1D68. Host synchronization otherwise only copies states 0..21."
+    },
+    "D3DDevice_CopyRects": {
+      "address": 2365088,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: 0x241563 reads source surface after 0x34-byte frame; 0x241589 reads destination at entry ESP+0x10 after four pushes, and both go through surface resolver 0x2411A0. Count at 0x2415BC/0x2415CE and rectangle/point traversal at 0x241737..0x2417FE establish five arguments; method 0xC4300 at 0x241806 carries source XY, destination XY and extent. Two paths ret 0x14 at 0x241874/0x241880. Title calls include framebuffer-to-texture copy 0x1044D9 and image-copy path 0x650A5."
+    },
+    "D3DDevice_SetPalette": {
+      "address": 2368016,
+      "evidence": "PAL relocation +0x140; SDK instruction/operand comparison and section layout agree. USA review: 0x2420D9 reads stage argument; 0x24210F reads palette argument; 0x2420DD/0x242115 read/write CDevice+0xB78+stage*4 with resource reference updates. 0x24213E reads palette Data at +4, 0x242146 emits NV097_SET_TEXTURE_PALETTE 0x41B20 with stage stride 0x40. 0x24215A returns ret 8. Title calls at 0x63BAF and 0x653AD."
+    }
+  },
+  "layout": {
+    "XPP_Current": {
+      "value": 0,
+      "evidence": "XGetDevices 0x291A19 reads record+0."
+    },
+    "XPP_Changed": {
+      "value": 4,
+      "evidence": "XGetDevices 0x291A19 clears record+4."
+    },
+    "XPP_Previous": {
+      "value": 8,
+      "evidence": "XGetDevices 0x291A19 writes record+8."
+    },
+    "CDevice_Push": {
+      "value": 0,
+      "evidence": "SetTexture 0x241F72 reads push pointer and 0x241F96 advances it."
+    },
+    "CDevice_PushThreshold": {
+      "value": 4,
+      "evidence": "SetTexture 0x241F75 compares push pointer with device+4."
+    },
+    "CDevice_BaseVertex": {
+      "value": 28,
+      "evidence": "SetIndices 0x2421B9/0x2421CB/0x2421DD store BaseVertexIndex here."
+    },
+    "CDevice_IndexBuffer": {
+      "value": 904,
+      "evidence": "SetIndices 0x24218A reads prior buffer; 0x2421B2 writes new buffer."
+    },
+    "CDevice_ZScale": {
+      "value": 1328,
+      "evidence": "GetViewportOffsetAndScale 0x243EA4/0x243EB4 scales viewport Z range and origin by device+0x530."
+    },
+    "CDevice_SuperSampleX": {
+      "value": 1348,
+      "evidence": "GetViewportOffsetAndScale 0x243DFE/0x243E63 multiplies viewport X/Width by this field."
+    },
+    "CDevice_SuperSampleY": {
+      "value": 1352,
+      "evidence": "GetViewportOffsetAndScale 0x243E20/0x243E88 multiplies viewport Y/Height by this field."
+    },
+    "CDevice_Transforms": {
+      "value": 2112,
+      "evidence": "SetTransform 0x240F71 computes (type+0x21)*64, equivalent to device+0x840+type*64."
+    },
+    "CDevice_Textures": {
+      "value": 2920,
+      "evidence": "SetTexture 0x241F30/0x241F69 reads/writes device+0xB68+stage*4."
+    },
+    "CDevice_RenderTarget": {
+      "value": 5604,
+      "evidence": "GetRenderTarget2 0x241896 returns device+0x15E4."
+    },
+    "CDevice_Depth": {
+      "value": 5608,
+      "evidence": "GetDepthStencilSurface2 0x2418B6 returns device+0x15E8."
+    },
+    "CDevice_BackBuffer": {
+      "value": 5620,
+      "evidence": "GetBackBuffer2 index 0 at 0x241538..0x241540 selects device+0x15F4."
+    },
+    "CDevice_FrontBuffer": {
+      "value": 5624,
+      "evidence": "GetBackBuffer2 index -1 at 0x24151F..0x241525 selects device+0x15F8."
+    },
+    "CDevice_SwapCount": {
+      "value": 8280,
+      "evidence": "Swap increments this field at 0x24E790/0x24E7D0 and returns it at 0x24E80B."
+    },
+    "CDevice_Size": {
+      "value": 8320,
+      "evidence": "CreateDevice failure cleanup at 0x24E959..0x24E960 clears 0x820 dwords starting at device 0x251980."
+    },
+    "CDevice_Viewport": {
+      "value": 2752,
+      "evidence": "SetViewport 0x241A80..0x241AAC stores the six viewport words at +0xAC0..+0xAD4."
+    },
+    "CDevice_PixelShader": {
+      "value": 876,
+      "evidence": "SetPixelShader 0x24E9F8/0x24EA08 reads/writes shader handle."
+    },
+    "CDevice_Flags": {
+      "value": 8,
+      "evidence": "CreateDevice 0x24E916/0x24E933 retains BehaviorFlags 0x10 at device+8; SetPixelShader 0x24EAD1 tests it."
+    },
+    "DirtyFlags_Texture": {
+      "value": 18432,
+      "evidence": "SetTexture 0x241FA7 ORs 0x4800 into dirty flags after clearing texture."
+    },
+    "TextureState_Stage": {
+      "value": 32,
+      "evidence": "SetTextureStageStateNotInline 0x2447DB multiplies stage by 32 dwords, combined with type at 0x2447E0; table write 0x2447EC."
+    },
+    "Stream_Size": {
+      "value": 12,
+      "evidence": "SetStreamSource 0x2437CA/0x2437CD computes stream index * 3 * 4."
+    },
+    "Stream_Stride": {
+      "value": 0,
+      "evidence": "SetStreamSource 0x243812 writes stride argument to table base 0x253A00+stream*12."
+    },
+    "Stream_Buffer": {
+      "value": 8,
+      "evidence": "SetStreamSource 0x243818 writes vertex buffer to table base+8."
+    },
+    "PixelShader_Definition": {
+      "value": 8,
+      "evidence": "CreatePixelShader 0x24E9C4 stores definition at handle+8; SetPixelShader 0x24EA70 reads it."
+    },
+    "CDevice_ScreenSpaceOffset": {
+      "value": 2776,
+      "evidence": "SetScreenSpaceOffset 0x242613/0x242623 stores X/Y plus library bias at +0xAD8/+0xADC."
+    },
+    "CDevice_AutoDepth": {
+      "value": 5632,
+      "evidence": "Default-state initialization 0x2467D7 tests this surface pointer to set ZEnable (state 0x8F)."
+    },
+    "EffectsImage_Skip0": {
+      "value": 2052,
+      "evidence": "Effects descriptor builder 0x258D5E adds image+0x804 to the dword count from image+0x80C. Download path 0x256D01 -> 0x256215 -> 0x256082 -> 0x258FB2 copies that header field at 0x258FE0."
+    },
+    "EffectsImage_Skip1": {
+      "value": 2060,
+      "evidence": "Effects descriptor builder 0x258D58 loads image+0x80C before adding image+0x804; download copies this header word at 0x258FF2."
+    },
+    "EffectsImage_Desc": {
+      "value": 2072,
+      "evidence": "Effects descriptor builder 0x258D67 forms image+0x818+(Skip0+Skip1)*4; 0x258D6E reads effect count and 0x258D71 scales descriptor entries by 32. Heroes MpasFX.bin yields two effects within its 14028 bytes."
+    },
+    "CDevice_VBlankCount": {
+      "value": 6600,
+      "evidence": "CDevice initialization 0x246F87 locates miniport at +0x1808. Its vertical-blank handler 0x248934/0x248941 increments miniport+0x1C0, equivalent to device+0x19C8."
+    },
+    "CDevice_VBlankEvent": {
+      "value": 6556,
+      "evidence": "BlockUntilVerticalBlank 0x2410D7 waits on device+0x199C. Miniport vertical-blank handler 0x2489D1 signals miniport+0x194, with miniport at device+0x1808."
+    },
+    "CDevice_VBlankCallback": {
+      "value": 6552,
+      "evidence": "Miniport vertical-blank handler 0x2489DE reads callback at miniport+0x190 and calls it at 0x248A05 with a pointer to three status dwords. Miniport starts at device+0x1808."
+    },
+    "CDevice_VertexShader": {
+      "value": 892,
+      "evidence": "Device initialization 0x247307 stores static FVF object pointer at +0x37C; SetVertexShader 0x243C3E stores the active decoded shader object here (the raw shader handle is separately at +0x380)."
+    },
+    "CDevice_Palettes": {
+      "value": 2936,
+      "evidence": "SetPalette 0x2420DD/0x2420EE reads old palette and 0x242115 writes new palette at device+0xB78+stage*4; initialization 0x24747F addresses this array."
+    }
+  },
+  "xbeSha256s": [
+    "0d8b3d2e7f0f125e7ffefdd72241409177828b5380bd539ac3dfa03078ea0c80",
+    "4e2902daaca3b2a35003853ac5635dff441a48b0f2da793aef61f1772afab4bc",
+    "34fc0c6fa3ae1c1c41cf4a230c8fc94a0ff5b9bcd45692b6a5d15aed34d8aea3",
+    "a95d6065ad4561be735e3e065eced6b3c7e4886be9691421e1cd21a9f818e42c"
+  ]
+}

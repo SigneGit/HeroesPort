@@ -4,7 +4,9 @@ import {mkdtempSync,writeFileSync,mkdirSync,existsSync,readFileSync,rmSync,renam
 import {tmpdir} from 'node:os';
 import {join,dirname} from 'node:path';
 import {createHash} from 'node:crypto';
-import {importAssets,validateAssets,manifestName} from '../tools/portable-assets.mjs';
+import {importAssets,validateAssets,manifestName,commitImport} from '../tools/portable-assets.mjs';
+import {spawn} from 'node:child_process';
+import {selectBuild} from '../tools/supported-builds.mjs';
 import {preparePortable} from '../tools/portable-prepare.mjs';
 
 function syntheticGame() {
@@ -13,8 +15,53 @@ function syntheticGame() {
   set(0x128,0x11000^0xa8fc57ab);set(0x158,0x11040^0x5b6d40b6);set(0x188,0x12345678);
   set(0x240,4);set(0x244,0x11000);set(0x248,0x100);set(0x24c,0x400);set(0x250,0x80);set(0x254,0x10280);xbe.write('.text\0',0x280);xbe[0x400]=0xc3;
   const iso=Buffer.alloc(0x13000);iso.write('MICROSOFT*XBOX*MEDIA',0x10000);iso.write('MICROSOFT*XBOX*MEDIA',0x107ec);iso.writeUInt32LE(0x22,0x10014);iso.writeUInt32LE(64,0x10018);iso.writeUInt32LE(0x24,0x11004);iso.writeUInt32LE(xbe.length,0x11008);iso[0x1100c]=0x20;iso[0x1100d]=11;iso.write('default.xbe',0x1100e);xbe.copy(iso,0x12000);
-  return {iso,profile:{name:'Synthetic',titleId:'0x12345678',xbeSha256:createHash('sha256').update(xbe).digest('hex')}};
+  const xbeSha256=createHash('sha256').update(xbe).digest('hex');
+  const inventory=[['default.xbe',xbe.length,xbeSha256]];
+  const extractedTreeSha256=createHash('sha256').update(JSON.stringify(inventory)).digest('hex');
+  return {iso,profile:{name:'Synthetic',titleId:'0x12345678',xbeSha256,extractedTreeSha256}};
 }
+
+test('import commit retries temporary Windows locks without replacing another import',()=>{
+  const directory=mkdtempSync(join(tmpdir(),'heroes-import-commit-'));
+  try {
+    const stage=join(directory,'staged'),assets=join(directory,'assets');mkdirSync(stage);
+    writeFileSync(join(stage,'verified.txt'),'verified');
+    let attempts=0;const waits=[];
+    commitImport(stage,assets,{rename:(from,to)=>{
+      if(++attempts<4)throw Object.assign(Error('temporarily locked'),{code:'EPERM'});
+      renameSync(from,to);
+    },wait:ms=>waits.push(ms)});
+    assert.equal(attempts,4);assert.deepEqual(waits,[50,100,200]);
+    assert.equal(readFileSync(join(assets,'verified.txt'),'utf8'),'verified');
+    mkdirSync(stage);
+    assert.throws(()=>commitImport(stage,assets),/already exists/);
+    assert.equal(readFileSync(join(assets,'verified.txt'),'utf8'),'verified');
+    assert.throws(()=>commitImport(stage,join(directory,'other'),{
+      rename:()=>{throw Object.assign(Error('missing source'),{code:'ENOENT'});},
+      wait:()=>assert.fail('Permanent errors must not be retried'),
+    }),/missing source/);
+  } finally {rmSync(directory,{recursive:true,force:true});}
+});
+
+test('import commit survives an actual Windows handle denying file deletion',{skip:process.platform!=='win32'},async()=>{
+  const directory=mkdtempSync(join(tmpdir(),'heroes-windows-lock-'));
+  let locker;
+  try {
+    const stage=join(directory,'staged'),assets=join(directory,'assets');mkdirSync(stage);
+    const file=join(stage,'verified.txt');writeFileSync(file,'verified');
+    const literal=file.replaceAll("'","''");
+    locker=spawn('powershell.exe',['-NoProfile','-Command',
+      `$ErrorActionPreference='Stop'; $stream=[IO.File]::Open('${literal}',[IO.FileMode]::Open,[IO.FileAccess]::Read,[IO.FileShare]::ReadWrite); try { Write-Output 'LOCKED'; Start-Sleep -Milliseconds 800 } finally { $stream.Dispose() }`],{windowsHide:true});
+    await new Promise((resolve,reject)=>{
+      locker.once('error',reject);
+      locker.once('exit',code=>reject(Error('Lock holder exited before locking: '+code)));
+      locker.stdout.once('data',data=>data.toString().includes('LOCKED')?resolve():reject(Error('Unexpected lock status')));
+    });
+    const started=Date.now();commitImport(stage,assets);
+    assert.ok(Date.now()-started>=500,'Commit must wait for the open handle');
+    assert.equal(readFileSync(join(assets,'verified.txt'),'utf8'),'verified');
+  } finally {if(locker&&!locker.exitCode)locker.kill();rmSync(directory,{recursive:true,force:true});}
+});
 test('portable extraction is atomic, reusable and relative to its release folder',()=>{
   const d=mkdtempSync(join(tmpdir(),'heroes-portable-import-'));
   try {
@@ -25,7 +72,17 @@ test('portable extraction is atomic, reusable and relative to its release folder
     renameSync(join(d,'release'),join(d,'moved release'));
     const moved=join(d,'moved release/assets');assert.equal(validateAssets(moved,profile),1);
     assert.equal(importAssets(image,moved,profile),1);
-    assert.throws(()=>importAssets(image,join(d,'unsupported/assets'),{...profile,xbeSha256:'0'.repeat(64)}),/Unsupported ISO/);
+    // Same executable, but an unexpected second file in the XISO directory.
+    iso.writeUInt16LE(8,0x11002);
+    iso[0x1102d]=5;
+    iso.write('extra',0x1102e);
+    writeFileSync(image,iso);
+    const fresh=join(d,'fresh/assets');
+    assert.throws(()=>importAssets(image,fresh,profile),/complete, unmodified/);
+    assert.equal(existsSync(fresh),false);
+    assert.throws(()=>importAssets(image,moved,profile),/complete, unmodified/);
+    assert.equal(validateAssets(moved,profile),1);
+    assert.throws(()=>importAssets(image,join(d,'unsupported/assets'),{...profile,xbeSha256:'0'.repeat(64)}),/Unsupported executable/);
     assert.ok(!existsSync(join(d,'unsupported/assets')));
     writeFileSync(join(moved,'default.xbe'),'damaged');assert.throws(()=>validateAssets(moved,profile),/missing or damaged/);
   } finally {rmSync(d,{recursive:true,force:true});}
@@ -53,18 +110,41 @@ test('portable preparation runs only bundled tools and clears readiness on failu
     const {iso,profile}=syntheticGame(),image=join(d,'game.iso'),release=join(d,'release');writeFileSync(image,iso);
     const put=(name,data='test')=>{const file=join(release,name);mkdirSync(dirname(file),{recursive:true});writeFileSync(file,data);};
     for(const name of ['Heroes.exe','compiler/clang.exe','compiler/lld-link.exe','compiler/xbe_recomp.exe','compiler/Heroes.lib'])put(name);
-    put('config/supported-build.json',JSON.stringify(profile));
+    put('config/supported-build.json',JSON.stringify({
+      ...profile,xbeSha256:'0'.repeat(64),
+      variants:[{...profile,nativeConfig:'heroes-pal.toml'}],
+    }));
     const steps=[];
     await preparePortable({directory:release,iso:image,run:async(executable,args,cwd)=>{
       steps.push(executable);assert.ok(executable.startsWith(join(release,'compiler')));
+      if(executable.endsWith('xbe_recomp.exe'))assert.equal(args[0],join(release,'compiler/config/heroes-pal.toml'));
       assert.ok(!existsSync(join(release,'heroes-ready.json')));
       if(executable.endsWith('clang.exe'))writeFileSync(join(cwd,args.at(-1)),'object');
       if(executable.endsWith('lld-link.exe'))put('Heroes.dll');
     }});
+    assert.match(readFileSync(join(release,'compiler/work/Heroes/built.txt'),'utf8'),/^\d+ \d+ [a-f0-9]{40}\n$/);
     assert.equal(steps.length,67);assert.equal(JSON.parse(readFileSync(join(release,'heroes-ready.json'))).schemaVersion,2);
+    assert.equal(JSON.parse(readFileSync(join(release,'heroes-ready.json'))).xbeSha256,profile.xbeSha256);
     await assert.rejects(preparePortable({directory:release,run:async()=>{throw Error('compiler failed');}}),/compiler failed/);
     assert.ok(!existsSync(join(release,'heroes-ready.json')));assert.equal(validateAssets(join(release,'assets'),profile),1);
     const manifest=JSON.parse(readFileSync(join(release,'assets',manifestName)));manifest.files[0].path='../escape';put('assets/'+manifestName,JSON.stringify(manifest));
     assert.throws(()=>validateAssets(join(release,'assets'),profile),/Unsafe path/);
   } finally {rmSync(d,{recursive:true,force:true});}
+});
+
+test('regional selection keeps executable and complete asset inventories paired',()=>{
+  const directory=mkdtempSync(join(tmpdir(),'heroes-regions-'));
+  try {
+    const {iso,profile}=syntheticGame();
+    const primary={...profile,xbeSha256:'0'.repeat(64),extractedTreeSha256:'0'.repeat(64)};
+    const config={...primary,variants:[{...profile,id:'pal',nativeConfig:'heroes-pal.toml'}]};
+    const image=join(directory,'pal.iso'),assets=join(directory,'assets');writeFileSync(image,iso);
+    assert.equal(selectBuild(config,profile.xbeSha256,profile.titleId).id,'pal');
+    assert.throws(()=>selectBuild(config,profile.xbeSha256,'0x00000000'),/Unsupported/);
+    assert.equal(importAssets(image,assets,config),1);
+    assert.equal(validateAssets(assets,config),1);
+    assert.throws(()=>validateAssets(assets,primary),/Unsupported/);
+    const mixed={...config,variants:[{...profile,extractedTreeSha256:primary.extractedTreeSha256}]};
+    assert.throws(()=>validateAssets(assets,mixed),/complete, unmodified/);
+  } finally {rmSync(directory,{recursive:true,force:true});}
 });

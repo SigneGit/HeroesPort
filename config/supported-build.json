@@ -4,11 +4,95 @@
   "xbeSha256": "f48303a89fa9e2043d301ee6444ae69602570a03f1dd3de386f88928b5478ece",
   "extractedTreeSha256": "ff79cb3b01f443f92e998db6551f90c60583547724c8054bdedb403440d44dc2",
   "entryPoint": "0x00055c61",
-  "analysisSeeds": ["0x00055bed", "0x000562eb"],
-  "analysisPointerTables": [
-    {"start": "0x002e6440", "end": "0x002e644c", "role": "XDK early initializer table"},
-    {"start": "0x002e6450", "end": "0x002e65d0", "role": "C++ initializer table"},
-    {"start": "0x002e65d4", "end": "0x002e65e8", "role": "CRT initializer table"}
+  "analysisSeeds": [
+    "0x00055bed",
+    "0x000562eb"
   ],
-  "note": "Executable fingerprint only. Other revisions must be analyzed before adding support."
+  "analysisPointerTables": [
+    {
+      "start": "0x002e6440",
+      "end": "0x002e644c",
+      "role": "XDK early initializer table"
+    },
+    {
+      "start": "0x002e6450",
+      "end": "0x002e65d0",
+      "role": "C++ initializer table"
+    },
+    {
+      "start": "0x002e65d4",
+      "end": "0x002e65e8",
+      "role": "CRT initializer table"
+    }
+  ],
+  "note": "Exact executable and complete extracted-file fingerprints for the supplied USA, Europe, France, Italy and Spain discs. PAL code uses separately reviewed address mappings.",
+  "id": "usa",
+  "nativeConfig": "heroes-usa.toml",
+  "variants": [
+    {
+      "id": "europe",
+      "name": "Dungeons & Dragons: Heroes (Europe), supplied retail XBE",
+      "titleId": "0x49470013",
+      "xbeSha256": "0d8b3d2e7f0f125e7ffefdd72241409177828b5380bd539ac3dfa03078ea0c80",
+      "extractedTreeSha256": "0464e793c9a469746635220237454e37135a74af9cbd9044e72fc51a8343bce7",
+      "entryPoint": "0x00055ce1",
+      "analysisSeeds": [
+        "0x00055c6d",
+        "0x0005636b"
+      ],
+      "nativeConfig": "heroes-pal.toml",
+      "verifiedMapping": "verified-pal.json",
+      "hooks": "heroes-pal-hooks.toml",
+      "xbeSha1": "edd86dc932836f76ab07bb69c9c1657977d5b791"
+    },
+    {
+      "id": "france",
+      "name": "Dungeons & Dragons: Heroes (France), supplied retail XBE",
+      "titleId": "0x49470013",
+      "xbeSha256": "4e2902daaca3b2a35003853ac5635dff441a48b0f2da793aef61f1772afab4bc",
+      "extractedTreeSha256": "92885135b976def070d8734f54af9beffe2cce5257f3d80824804a20c2eff92f",
+      "entryPoint": "0x00055ce1",
+      "analysisSeeds": [
+        "0x00055c6d",
+        "0x0005636b"
+      ],
+      "nativeConfig": "heroes-pal.toml",
+      "verifiedMapping": "verified-pal.json",
+      "hooks": "heroes-pal-hooks.toml",
+      "xbeSha1": "caa8ee15199e8636b87e5d26affc3f0406b92f5d"
+    },
+    {
+      "id": "italy",
+      "name": "Dungeons & Dragons: Heroes (Italy), supplied retail XBE",
+      "titleId": "0x49470013",
+      "xbeSha256": "34fc0c6fa3ae1c1c41cf4a230c8fc94a0ff5b9bcd45692b6a5d15aed34d8aea3",
+      "extractedTreeSha256": "82d3c1a648da4dfad8ac338c7d7ee4c5acb994618fb4f6912e7bfc5ea89c7819",
+      "entryPoint": "0x00055ce1",
+      "analysisSeeds": [
+        "0x00055c6d",
+        "0x0005636b"
+      ],
+      "nativeConfig": "heroes-pal.toml",
+      "verifiedMapping": "verified-pal.json",
+      "hooks": "heroes-pal-hooks.toml",
+      "xbeSha1": "feebbc708a0cf75ad2f941dc63a7a0f5c8ed12c3"
+    },
+    {
+      "id": "spain",
+      "name": "Dungeons & Dragons: Heroes (Spain), supplied retail XBE",
+      "titleId": "0x49470013",
+      "xbeSha256": "a95d6065ad4561be735e3e065eced6b3c7e4886be9691421e1cd21a9f818e42c",
+      "extractedTreeSha256": "b3c8641567befb8870f411fff53a69bc760b0a75aac1ca1cdcec21e3764947a9",
+      "entryPoint": "0x00055ce1",
+      "analysisSeeds": [
+        "0x00055c6d",
+        "0x0005636b"
+      ],
+      "nativeConfig": "heroes-pal.toml",
+      "verifiedMapping": "verified-pal.json",
+      "hooks": "heroes-pal-hooks.toml",
+      "xbeSha1": "5a8f279b3d56443a53567d41afa1eac2c6e58c4b"
+    }
+  ],
+  "xbeSha1": "0bb472b7e78e98635b59e31a431b9167e223e035"
 }

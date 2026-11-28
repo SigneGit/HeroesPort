@@ -1,3 +1,4 @@
+#include "region.h"
 #include "cheats.h"
 #include "cheat_policy.h"
 #include "temporary_cheat.h"
@@ -16,7 +17,8 @@
 namespace {
 // Supported executable only. Original debug callbacks 2C190 and 2B5A0
 // obtain players through singleton 49D0B8 -> +14 -> table +246F8.
-constexpr uint32_t kPlayersRoot = 0x49d0b8, kManager = 0x14, kPlayers = 0x246f8;
+uint32_t PlayersRoot() { return heroes::GuestAddress(0x49d0b8); }
+constexpr uint32_t kManager = 0x14, kPlayers = 0x246f8;
 constexpr uint32_t kHealth = 0x74, kMana = 0x24b0, kMaxMana = 0x24b4;
 
 bool Readable(uint32_t address, uint32_t bytes) {
@@ -30,8 +32,8 @@ bool Readable(uint32_t address, uint32_t bytes) {
 
 std::array<uint32_t, 4> Players() {
     std::array<uint32_t, 4> players{};
-    if (!Readable(kPlayersRoot, 4)) return players;
-    const auto root = kernel::R32(kPlayersRoot);
+    if (!Readable(PlayersRoot(), 4)) return players;
+    const auto root = kernel::R32(PlayersRoot());
     if (!Readable(root, kManager + 4)) return players;
     const auto manager = kernel::R32(root + kManager);
     if (!Readable(manager, kPlayers + 16)) return players;
@@ -108,7 +110,7 @@ bool IsPlayer(uint32_t entity) {
     return false;
 }
 uint32_t Manager() {
-    const auto root=kernel::R32(kPlayersRoot);
+    const auto root=kernel::R32(PlayersRoot());
     return Readable(root,0x18)?kernel::R32(root+0x14):0;
 }
 uint32_t QuestTable() {
@@ -198,26 +200,26 @@ constexpr std::array<uint32_t,9> preview_ids{0x12,0x1a,0x25,0x2c,0x2b,0x2a,0x2d,
 void RemovePreview(PlayerOverrides& state,X86Context& ctx) {
     if(!state.player||!Readable(state.player,0x2d20)){state.preview_buffs.clear();return;}
     for(auto id:state.preview_buffs) {
-        const auto index=CallThis(ctx,0xc5290,state.player,{id});
+        const auto index=CallThis(ctx,heroes::GuestAddress(0xc5290),state.player,{id});
         const auto count=ReadField(state.player+0x2472,1);
         if(index>=count||count>15||ReadFloat(state.player+0x19c8+index*20)!=0)continue;
         // The original expiration path negates magnitude, removes the entry
         // by swapping in the last 20-byte record, and refreshes the HUD.
-        CallThis(ctx,0xd4050,state.player,{id,0x80000000u});
+        CallThis(ctx,heroes::GuestAddress(0xd4050),state.player,{id,0x80000000u});
         std::memmove(kernel::HostPtr(state.player+0x19b8+index*20),
             kernel::HostPtr(state.player+0x19b8+(count-1)*20),20);
         WriteField(state.player+0x2472,count-1,1);
     }
-    if(!state.preview_buffs.empty())kernel::CallGuest(ctx,0xd8d10,{ReadField(state.player+0x2471,1)});
+    if(!state.preview_buffs.empty())kernel::CallGuest(ctx,heroes::GuestAddress(0xd8d10),{ReadField(state.player+0x2471,1)});
     state.preview_buffs.clear();
 }
 void BuffPreview(PlayerOverrides& state,X86Context& ctx,bool enabled) {
     if(!enabled){RemovePreview(state,ctx);return;}
     for(auto id:preview_ids) {
-        if(CallThis(ctx,0xc5290,state.player,{id})!=UINT32_MAX)continue;
+        if(CallThis(ctx,heroes::GuestAddress(0xc5290),state.player,{id})!=UINT32_MAX)continue;
         if(ReadField(state.player+0x2472,1)>=15)break;
-        CallThis(ctx,0xd60d0,state.player,{id,0,0});
-        if(CallThis(ctx,0xc5290,state.player,{id})!=UINT32_MAX&&
+        CallThis(ctx,heroes::GuestAddress(0xd60d0),state.player,{id,0,0});
+        if(CallThis(ctx,heroes::GuestAddress(0xc5290),state.player,{id})!=UINT32_MAX&&
             std::find(state.preview_buffs.begin(),state.preview_buffs.end(),id)==state.preview_buffs.end())
             state.preview_buffs.push_back(id);
     }
@@ -231,14 +233,14 @@ void PermanentAction(X86Context& ctx,heroes::CheatAction action) {
     if(!descriptor){heroes::cheat_action_result=2;return;}
     uint32_t fn=0;float value=0;
     switch(action) {
-        case heroes::CheatAction::Revive:fn=0x2b7a0;break;
-        case heroes::CheatAction::Health:fn=0x33720;value=float(heroes::health_limit.load());break;
-        case heroes::CheatAction::XP:fn=0x33760;value=float(heroes::xp_value.load());break;
-        case heroes::CheatAction::Moves:fn=0x33950;value=float(heroes::move_level.load());break;
-        case heroes::CheatAction::Melee:fn=0x339b0;value=float(heroes::melee_level.load());break;
-        case heroes::CheatAction::Items:fn=0x2b5f0;break;
-        case heroes::CheatAction::Gems:fn=0x2b650;break;
-        case heroes::CheatAction::Buffs:fn=0x2b6e0;break;
+        case heroes::CheatAction::Revive:fn=heroes::GuestAddress(0x2b7a0);break;
+        case heroes::CheatAction::Health:fn=heroes::GuestAddress(0x33720);value=float(heroes::health_limit.load());break;
+        case heroes::CheatAction::XP:fn=heroes::GuestAddress(0x33760);value=float(heroes::xp_value.load());break;
+        case heroes::CheatAction::Moves:fn=heroes::GuestAddress(0x33950);value=float(heroes::move_level.load());break;
+        case heroes::CheatAction::Melee:fn=heroes::GuestAddress(0x339b0);value=float(heroes::melee_level.load());break;
+        case heroes::CheatAction::Items:fn=heroes::GuestAddress(0x2b5f0);break;
+        case heroes::CheatAction::Gems:fn=heroes::GuestAddress(0x2b650);break;
+        case heroes::CheatAction::Buffs:fn=heroes::GuestAddress(0x2b6e0);break;
         default:return;
     }
     std::memcpy(kernel::HostPtr(descriptor+0x30),&value,4);
@@ -276,7 +278,7 @@ void ExpandedFrame(X86Context& ctx,const std::array<uint32_t,4>& players) {
         }
         if(heroes::auto_revive.load()&&kernel::R32(p+0x2468)==4)revive=true;
     }
-    if(revive)kernel::CallGuest(ctx,0x2b7a0,{0});
+    if(revive)kernel::CallGuest(ctx,heroes::GuestAddress(0x2b7a0),{0});
     const auto table=QuestTable();
     if(gem_owner && table!=gem_owner){gem_owner=0;gem_values={};}
     if(heroes::temporary_gems.load()&&any&&Readable(table,0xe8+406*8)) {
@@ -289,7 +291,7 @@ void ExpandedFrame(X86Context& ctx,const std::array<uint32_t,4>& players) {
     if(circle_owner!=manager){circle_owner=manager;circle_original=(kernel::R32(manager+0x247c8)&0x20)!=0;circle_applied=false;}
     const bool want=heroes::player_circles.load();
     if(want!=circle_applied || (want&&changed)) {
-        CallThis(ctx,0xb3bb0,manager,{uint32_t(want||circle_original)});circle_applied=want;
+        CallThis(ctx,heroes::GuestAddress(0xb3bb0),manager,{uint32_t(want||circle_original)});circle_applied=want;
     }
 }
 }
@@ -339,11 +341,11 @@ void OneHit(X86Context& ctx,uint32_t target,uint32_t descriptor,uint32_t source)
         source=kernel::R32(source+0x9c);
     }
     if(!hero)return;
-    uint32_t monster=kernel::R32(0x49d158);
-    if(!monster)monster=kernel::CallGuest(ctx,0xe2d60,{});
+    uint32_t monster=kernel::R32(heroes::GuestAddress(0x49d158));
+    if(!monster)monster=kernel::CallGuest(ctx,heroes::GuestAddress(0xe2d60),{});
     // The guest RTTI predicate returns a bool in AL; its upper EAX bits
     // still contain a type pointer on a false return.
-    if(!monster||!(CallThis(ctx,0x15000,target,{monster})&0xffu))return;
+    if(!monster||!(CallThis(ctx,heroes::GuestAddress(0x15000),target,{monster})&0xffu))return;
     const auto hp=ReadFloat(target+0x74),damage=ReadFloat(descriptor+0x1c);
     if(std::isfinite(hp)&&std::isfinite(damage)&&hp>0&&damage>0) {
         const float remaining=std::min(hp,damage);

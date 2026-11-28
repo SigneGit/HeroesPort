@@ -3,13 +3,17 @@ import {join} from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {root} from './game-image.mjs';
+import {selectBuild} from './supported-builds.mjs';
 
-export function validateLauncherImport(directory=join(root,'local/game')) {
-  const profile=JSON.parse(readFileSync(join(root,'config/supported-build.json')));
+export function validateLauncherImport(directory=join(root,'local/game'),expectedSha256) {
+  const config=JSON.parse(readFileSync(join(root,'config/supported-build.json')));
   const manifest=JSON.parse(readFileSync(join(directory,'manifest.json')));
   const digest=createHash('sha256').update(readFileSync(join(directory,'assets/default.xbe'))).digest('hex');
-  if(digest!==profile.xbeSha256||manifest.executableSha256!==digest)
-    throw Error('Imported executable does not match the supported USA game. Existing files were retained.');
+  selectBuild(config,digest);
+  if(manifest.executableSha256!==digest)
+    throw Error('Imported executable does not match the supported game. Existing files were retained.');
+  if(expectedSha256&&digest!==expectedSha256)
+    throw Error('A different Heroes version is already imported. Move local/game aside before importing another version. Existing files were retained.');
   return manifest.files.length;
 }
 
@@ -22,13 +26,13 @@ if(process.argv[1]?.endsWith('launcher-import.mjs')) {
     const inspect=spawnSync(process.execPath,[join(root,'tools/heroes.mjs'),'inspect',iso],{encoding:'utf8'});
     if(inspect.status!==0)throw Error(inspect.stderr||'Unable to inspect ISO.');
     const report=JSON.parse(inspect.stdout),profile=JSON.parse(readFileSync(join(root,'config/supported-build.json')));
-    if(report.sha256!==profile.xbeSha256||report.titleId!==profile.titleId)throw Error('Unsupported ISO executable. The supported USA game is required.');
+    selectBuild(profile,report.sha256,report.titleId);
     if(!existsSync(join(root,'local/game'))) {
       console.log('Extracting verified game data. This may take a few minutes...');
       const run=spawnSync(process.execPath,[join(root,'tools/heroes.mjs'),'import',iso],{stdio:'inherit'});
       if(run.status!==0)throw Error('Import failed. See the extraction log.');
     }
-    const count=validateLauncherImport();
+    const count=validateLauncherImport(undefined,report.sha256);
     const assets=join(root,'native/assets'),source=join(root,'local/game/assets');
     if(!existsSync(assets))symlinkSync(source,assets,'junction');
     if(realpathSync(assets)!==realpathSync(source))throw Error('native/assets points to a different import. Existing files were retained.');

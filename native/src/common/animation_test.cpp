@@ -1,3 +1,4 @@
+#include "region.h"
 #include "cpu/x86_context.h"
 #include "kernel/kernel.h"
 #include "core/log.h"
@@ -71,9 +72,9 @@ void HeroesAnimationModelEntry(X86Context&, uint8_t*) {
 bool HeroesAnimationAlternateGate(X86Context& ctx, uint8_t*) {
     if (Mode() == AnimationMode::Off) return false;
     ++stats.eligible;
-    if (Readable(0x49d094, 1) && Readable(ctx.ebp, 0x111) && Readable(0x49c7fc, 4)) {
-        const auto render = kernel::R32(0x49c7fc);
-        if (Readable(render, 0x10) && *static_cast<uint8_t*>(kernel::HostPtr(0x49d094)) &&
+    if (Readable(heroes::GuestAddress(0x49d094), 1) && Readable(ctx.ebp, 0x111) && Readable(heroes::GuestAddress(0x49c7fc), 4)) {
+        const auto render = kernel::R32(heroes::GuestAddress(0x49c7fc));
+        if (Readable(render, 0x10) && *static_cast<uint8_t*>(kernel::HostPtr(heroes::GuestAddress(0x49d094))) &&
             (*static_cast<uint8_t*>(kernel::HostPtr(ctx.ebp + 0xea)) & kernel::R32(render + 0xc) & 1)) ++stats.candidates;
     }
     // At B111E, EAX contains the flags needed at B1161. Preserve it, x87,
